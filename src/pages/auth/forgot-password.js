@@ -10,37 +10,110 @@ import {
 import React from 'react';
 import { AlertError } from 'src/@core/components/alerts/error';
 import { CustomTextField } from 'src/@core/components/forms/custom-text-field';
+import { PasswordField } from 'src/@core/components/forms/password-field';
 import { FormWrapper } from 'src/@core/components/forms/wrapper';
 import BlankLayout from 'src/@core/layouts/BlankLayout';
 import themeConfig from 'src/configs/themeConfig';
 import { CardCenterLayout } from 'src/@core/layouts/CardCenterLayout';
 import { usePostApi } from 'src/utils/api';
-import { registerField, useReactHookForm } from 'src/utils/form';
+import {
+  registerField,
+  setFormErrorFromApi,
+  useReactHookForm,
+} from 'src/utils/form';
 import * as yup from 'yup';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 const schema = yup
   .object({
-    email: yup.string().required(),
+    email: yup.string(),
   })
   .required();
 
+const renderEmailInput = (form) => {
+  return (
+    <>
+      <CustomTextField label='Email' {...registerField(form, 'email')} />
+    </>
+  );
+};
+
+const renderOtpInput = (form) => {
+  return (
+    <>
+      <CustomTextField label='6-digits OTP' {...registerField(form, 'otp')} />
+    </>
+  );
+};
+
+const renderPasswordInput = (form) => {
+  return (
+    <>
+      <PasswordField label='Password' {...registerField(form, 'newPassword')} />
+      <PasswordField
+        label='Password Confirmation'
+        {...registerField(form, 'newPasswordConfirmation')}
+      />
+    </>
+  );
+};
+
 const ForgotPassword = () => {
   const form = useReactHookForm(schema);
+  const router = useRouter();
+  const [stage, setStage] = useState('email');
+  const [savedData, setSavedData] = useState({});
+  const stages = {
+    email: 'auth/forgot-password',
+    otp: 'auth/forgot-password/verify-otp',
+    password: 'auth/reset-password',
+  };
 
   const onSubmit = async (input) => {
-    console.log(input);
+    console.log(input, stage, savedData[stage]);
 
-    const { data, error } = await usePostApi('auth/forgot-password', input);
+    const { data, error } = await usePostApi(
+      stages[stage],
+      Object.assign(input, savedData[stage] ?? {})
+    );
 
     console.log(data, error);
 
     if (error) {
-      form.setError('form', { type: 'api', message: data.message });
+      setFormErrorFromApi(form, data);
 
-      for (const key in data.errors) {
-        form.setError(key, { type: 'api', message: data.errors[key][0] });
-      }
+      return;
     }
+
+    if (stage === 'email') {
+      setSavedData({ ...savedData, otp: { email: input['email'] } });
+    }
+
+    if (stage === 'otp') {
+      setSavedData({ ...savedData, password: { token: data['token'] } });
+    }
+
+    if (stage === 'password') {
+      router.replace('/auth/login');
+      return;
+    }
+
+    const stageKeys = Object.keys(stages);
+    setStage(stageKeys[stageKeys.indexOf(stage) + 1]);
+    form.reset();
+  };
+
+  const renderingCondition = () => {
+    if (stage === 'email') {
+      return renderEmailInput(form);
+    }
+
+    if (stage === 'otp') {
+      return renderOtpInput(form);
+    }
+
+    return renderPasswordInput(form);
   };
 
   return (
@@ -75,7 +148,7 @@ const ForgotPassword = () => {
         </Typography>
       </Box>
       <FormWrapper form={form} onSubmit={onSubmit}>
-        <CustomTextField label='Email' {...registerField(form, 'email')} />
+        {renderingCondition()}
 
         <Button
           fullWidth
@@ -84,8 +157,9 @@ const ForgotPassword = () => {
           variant='contained'
           sx={{ marginBottom: 7 }}
         >
-          Send reset otp
+          Reset
         </Button>
+
         <Box
           sx={{
             display: 'flex',

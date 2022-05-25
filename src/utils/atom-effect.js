@@ -13,7 +13,7 @@ export function useEffectPersisAtom(key) {
       setItem: (key, value) => {
         console.log('Set Item', key);
 
-        return setCookies(key, value);
+        return setCookies(key, value, {});
       },
     },
   });

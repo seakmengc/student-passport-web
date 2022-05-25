@@ -24,7 +24,11 @@ import BlankLayout from 'src/@core/layouts/BlankLayout';
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustration';
 import { CustomTextField } from 'src/@core/components/forms/custom-text-field';
-import { registerField, useReactHookForm } from 'src/utils/form';
+import {
+  registerField,
+  setFormErrorFromApi,
+  useReactHookForm,
+} from 'src/utils/form';
 import * as yup from 'yup';
 import { useRecoilState } from 'recoil';
 import { tokenState } from 'src/states/token';
@@ -68,6 +72,11 @@ const LoginPage = () => {
     console.log(input);
 
     const { data, error } = await usePostApi('auth/login', input);
+    if (error) {
+      setFormErrorFromApi(form, data);
+
+      return;
+    }
 
     setTokenState((_) => data);
 

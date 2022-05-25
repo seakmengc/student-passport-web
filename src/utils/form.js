@@ -21,6 +21,14 @@ export const registerCheckboxField = (form, field) => {
   };
 };
 
+export const setFormErrorFromApi = (form, data) => {
+  form.setError('form', { type: 'api', message: data.message });
+
+  for (const key in data.errors) {
+    form.setError(key, { type: 'api', message: data.errors[key][0] });
+  }
+};
+
 export const useReactHookForm = (schema) => {
   return useForm({
     resolver: yupResolver(schema),
