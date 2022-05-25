@@ -1,18 +1,31 @@
+import { useGetApi } from 'src/utils/api';
 import { ssrGetToken } from 'src/utils/ssr';
 
 export const AdminRoute = (callback = null) => {
-  return (ctx) => {
+  const redirectRes = {
+    redirect: {
+      destination: '/auth/login',
+      permanent: false,
+    },
+  };
+
+  return async (ctx) => {
     const { accessToken } = ssrGetToken(ctx.req);
 
-    console.log({ accessToken });
-
     if (accessToken === null) {
-      return {
-        redirect: {
-          destination: '/auth/login',
-          permanent: false,
-        },
-      };
+      return redirectRes;
+    }
+
+    const { data, error } = await useGetApi(
+      'auth/me/fields',
+      {
+        fields: 'role,email',
+      },
+      accessToken
+    );
+    console.log({ data });
+    if (error || !data.role?.endsWith('Admin')) {
+      return redirectRes;
     }
 
     return callback
