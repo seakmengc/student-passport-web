@@ -21,21 +21,9 @@ import StatisticsCard from 'src/views/dashboard/StatisticsCard';
 import WeeklyOverview from 'src/views/dashboard/WeeklyOverview';
 import DepositWithdraw from 'src/views/dashboard/DepositWithdraw';
 import SalesByCountries from 'src/views/dashboard/SalesByCountries';
-import { useGetApi } from 'src/utils/api';
-import { useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
-import { authState } from 'src/states/auth';
+import { AdminRoute } from 'src/middleware/admin-route';
 
 const Dashboard = () => {
-  const auth = useRecoilValue(authState);
-
-  useEffect(async () => {
-    const { data, error } = await useGetApi('auth/me');
-
-    console.log(data);
-    console.log({ auth });
-  }, []);
-
   return (
     <ApexChartWrapper>
       <Grid container spacing={6}>
@@ -112,3 +100,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+export const getServerSideProps = AdminRoute();

@@ -1,7 +1,11 @@
 import cookie from 'cookie';
 
 export function ssrGetToken(req) {
-  const { token } = cookie.parse(req.headers.cookie);
+  if (!req.headers.cookie) {
+    return { accessToken: null, refreshToken: null };
+  }
 
-  return JSON.parse(token)['token'];
+  const { persist } = cookie.parse(req.headers.cookie);
+
+  return JSON.parse(persist)['token'];
 }

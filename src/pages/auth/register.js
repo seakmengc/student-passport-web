@@ -1,51 +1,26 @@
-// ** React Imports
-import { useState, Fragment } from 'react';
-
-// ** Next Imports
 import Link from 'next/link';
-
-// ** MUI Components
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import Checkbox from '@mui/material/Checkbox';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import InputLabel from '@mui/material/InputLabel';
-import IconButton from '@mui/material/IconButton';
-import CardContent from '@mui/material/CardContent';
-import FormControl from '@mui/material/FormControl';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import MuiCard from '@mui/material/Card';
-import InputAdornment from '@mui/material/InputAdornment';
 import MuiFormControlLabel from '@mui/material/FormControlLabel';
-
-// ** Icons Imports
-import Google from 'mdi-material-ui/Google';
-import Github from 'mdi-material-ui/Github';
-import Twitter from 'mdi-material-ui/Twitter';
-import Facebook from 'mdi-material-ui/Facebook';
-import EyeOutline from 'mdi-material-ui/EyeOutline';
-import EyeOffOutline from 'mdi-material-ui/EyeOffOutline';
-
-// ** Configs
 import themeConfig from 'src/configs/themeConfig';
-
-// ** Layout Import
-import BlankLayout from 'src/@core/layouts/BlankLayout';
-
-// ** Demo Imports
-import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustration';
 import { CardCenterLayout } from 'src/@core/layouts/CardCenterLayout';
 import { FormWrapper } from 'src/@core/components/forms/wrapper';
 import { CustomTextField } from 'src/@core/components/forms/custom-text-field';
-import { registerField, useReactHookForm } from 'src/utils/form';
+import {
+  registerField,
+  setFormErrorFromApi,
+  useReactHookForm,
+} from 'src/utils/form';
 import * as yup from 'yup';
 import { PasswordField } from 'src/@core/components/forms/password-field';
 import { usePostApi } from 'src/utils/api';
+import { useRecoilState } from 'recoil';
+import { useRouter } from 'next/router';
+import { tokenState } from 'src/states/token';
 
-// ** Styled Components
 const Card = styled(MuiCard)(({ theme }) => ({
   [theme.breakpoints.up('sm')]: { width: '28rem' },
 }));
@@ -75,27 +50,9 @@ const schema = yup
   .required();
 
 const RegisterPage = () => {
-  // ** States
-  const [values, setValues] = useState({
-    password: '',
-    showPassword: false,
-  });
-
-  // ** Hook
-  const theme = useTheme();
   const form = useReactHookForm(schema);
-
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
-
-  const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword });
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
+  const [tokenStore, setTokenStore] = useRecoilState(tokenState);
+  const router = useRouter();
 
   const onSubmit = async (input) => {
     console.log(input);
@@ -107,6 +64,9 @@ const RegisterPage = () => {
 
       return;
     }
+
+    setTokenStore((_) => data);
+    router.replace('/');
   };
 
   return (

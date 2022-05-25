@@ -31,11 +31,13 @@ import {
 } from 'src/utils/form';
 import * as yup from 'yup';
 import { useRecoilState } from 'recoil';
-import { tokenState } from 'src/states/token';
+import { setNewLogin, tokenState } from 'src/states/token';
 import { PasswordField } from 'src/@core/components/forms/password-field';
 import { CustomCheckbox } from 'src/@core/components/forms/custom-checkbox';
 import { usePostApi } from 'src/utils/api';
 import { CardCenterLayout } from 'src/@core/layouts/CardCenterLayout';
+import { getRecoil } from 'recoil-nexus';
+import { authState } from 'src/states/auth';
 
 // ** Styled Components
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -66,7 +68,6 @@ const schema = yup
 const LoginPage = () => {
   // ** State
   const form = useReactHookForm(schema);
-  const [token, setTokenState] = useRecoilState(tokenState);
 
   const onSubmit = async (input) => {
     console.log(input);
@@ -78,7 +79,7 @@ const LoginPage = () => {
       return;
     }
 
-    setTokenState((_) => data);
+    setNewLogin(data);
 
     router.push('/');
   };
