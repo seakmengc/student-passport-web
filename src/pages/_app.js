@@ -32,6 +32,7 @@ import '../../styles/globals.css';
 
 import { RecoilRoot } from 'recoil';
 import RecoilNexus from 'recoil-nexus';
+import { SnackbarProvider } from 'notistack';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -73,17 +74,23 @@ const App = (props) => {
           <meta name='viewport' content='initial-scale=1, width=device-width' />
         </Head>
 
-        <SettingsProvider>
-          <SettingsConsumer>
-            {({ settings }) => {
-              return (
-                <ThemeComponent settings={settings}>
-                  {getLayout(<Component {...pageProps} />)}
-                </ThemeComponent>
-              );
-            }}
-          </SettingsConsumer>
-        </SettingsProvider>
+        <SnackbarProvider
+          maxSnack={3}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          autoHideDuration={3000}
+        >
+          <SettingsProvider>
+            <SettingsConsumer>
+              {({ settings }) => {
+                return (
+                  <ThemeComponent settings={settings}>
+                    {getLayout(<Component {...pageProps} />)}
+                  </ThemeComponent>
+                );
+              }}
+            </SettingsConsumer>
+          </SettingsProvider>
+        </SnackbarProvider>
       </CacheProvider>
     </RecoilRoot>
   );

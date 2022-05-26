@@ -123,14 +123,14 @@ export default function OfficeList({ rows, pagination }) {
   );
 }
 
-export const getServerSideProps = AdminRoute(async ({ req }) => {
-  const { accessToken } = ssrGetToken(req);
+export const getServerSideProps = AdminRoute(async (ctx) => {
+  const { accessToken } = await ssrGetToken(ctx);
 
   const { data, error } = await useGetApi('office', {}, accessToken);
 
   console.log(data);
 
   return {
-    props: { rows: data.data, pagination: data.pagination },
+    props: { rows: data.data ?? [], pagination: data.pagination ?? {} },
   };
 });

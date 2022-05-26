@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TableBody from '@mui/material/TableBody';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
@@ -49,13 +49,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function UserList({ rows, columns, pagination }) {
+export default function UserList({ rows, pagination }) {
   // ** State
   const [value, setValue] = useState('account');
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
 
   return (
     <>
@@ -123,8 +119,8 @@ export default function UserList({ rows, columns, pagination }) {
   );
 }
 
-export const getServerSideProps = AdminRoute(async ({ req }) => {
-  const { accessToken } = ssrGetToken(req);
+export const getServerSideProps = AdminRoute(async (ctx) => {
+  const { accessToken } = await ssrGetToken(ctx);
 
   const { data, error } = await useGetApi('user', {}, accessToken);
 

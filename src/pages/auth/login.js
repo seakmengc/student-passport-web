@@ -30,11 +30,11 @@ import {
   useReactHookForm,
 } from 'src/utils/form';
 import * as yup from 'yup';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { setNewLogin, tokenState } from 'src/states/token';
 import { PasswordField } from 'src/@core/components/forms/password-field';
 import { CustomCheckbox } from 'src/@core/components/forms/custom-checkbox';
-import { usePostApi } from 'src/utils/api';
+import { usePostApi, useUnauthPostApi } from 'src/utils/api';
 import { CardCenterLayout } from 'src/@core/layouts/CardCenterLayout';
 import { getRecoil } from 'recoil-nexus';
 import { authState } from 'src/states/auth';
@@ -72,16 +72,16 @@ const LoginPage = () => {
   const onSubmit = async (input) => {
     console.log(input);
 
-    const { data, error } = await usePostApi('auth/login', input);
+    const { data, error } = await useUnauthPostApi('auth/login', input);
     if (error) {
       setFormErrorFromApi(form, data);
 
       return;
     }
 
-    setNewLogin(data);
+    const auth = await setNewLogin(data);
 
-    router.push('/');
+    router.push(auth.isAdmin ? '/admin' : '/');
   };
 
   // ** Hook

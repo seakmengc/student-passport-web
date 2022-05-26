@@ -1,13 +1,32 @@
-import { tokenState, useTokenState } from 'src/states/token';
+import {
+  getAccessToken,
+  setRefreshToken,
+  tokenState,
+  useTokenState,
+} from 'src/states/token';
 import { getRecoil, getRecoilPromise } from 'recoil-nexus';
+import { parseJwt } from './jwt';
 
 const baseUrl = process.env.NEXT_PUBLIC_API_BASEURL;
 
-const fetcher = (url, init) => {
-  return fetch(baseUrl + url, init).then(async (res) => ({
-    data: res.status === 204 ? null : await res.json(),
-    error: !res.ok,
-  }));
+export const fetcher = (url, init) => {
+  return fetch(baseUrl + url, init).then(async (res) => {
+    return {
+      data: res.status === 204 ? null : await res.json(),
+      error: !res.ok,
+    };
+  });
+};
+
+export const useUnauthPostApi = async (path, data) => {
+  return fetcher(path, {
+    method: 'POST',
+    accept: 'application/json',
+    body: JSON.stringify(data),
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
 };
 
 export const usePostApi = async (path, data, token = null) => {
@@ -16,8 +35,7 @@ export const usePostApi = async (path, data, token = null) => {
     accept: 'application/json',
     body: JSON.stringify(data),
     headers: {
-      authorization:
-        'Bearer ' + (token ?? getRecoil(tokenState).accessToken ?? ''),
+      authorization: 'Bearer ' + (token ?? (await getAccessToken()) ?? ''),
       'content-type': 'application/json',
     },
   });
@@ -33,8 +51,7 @@ export const useGetApi = async (path, data, token = null) => {
     method: 'GET',
     accept: 'application/json',
     headers: {
-      authorization:
-        'Bearer ' + (token ?? getRecoil(tokenState).accessToken ?? ''),
+      authorization: 'Bearer ' + (token ?? (await getAccessToken()) ?? ''),
     },
   });
 };
@@ -45,8 +62,7 @@ export const usePatchApi = async (path, data, token = null) => {
     accept: 'application/json',
     body: JSON.stringify(data),
     headers: {
-      authorization:
-        'Bearer ' + (token ?? getRecoil(tokenState).accessToken ?? ''),
+      authorization: 'Bearer ' + (token ?? (await getAccessToken()) ?? ''),
       'content-type': 'application/json',
     },
   });
@@ -62,8 +78,7 @@ export const useDeleteApi = async (path, data, token = null) => {
     method: 'DELETE',
     accept: 'application/json',
     headers: {
-      authorization:
-        'Bearer ' + (token ?? getRecoil(tokenState).accessToken ?? ''),
+      authorization: 'Bearer ' + (token ?? (await getAccessToken()) ?? ''),
     },
   });
 };
@@ -77,8 +92,7 @@ export const usePostUploadApi = async (file, token = null) => {
     accept: 'application/json',
     body: formData,
     headers: {
-      authorization:
-        'Bearer ' + (token ?? getRecoil(tokenState).accessToken ?? ''),
+      authorization: 'Bearer ' + (token ?? (await getAccessToken()) ?? ''),
     },
   });
 };

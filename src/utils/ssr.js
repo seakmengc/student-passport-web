@@ -1,11 +1,28 @@
-import cookie from 'cookie';
+import { refreshIfExpired } from 'src/states/token';
+import Cookies from 'cookies';
 
-export function ssrGetToken(req) {
+export async function ssrGetToken({ req, res }) {
+  if (req.token) {
+    return req.token;
+  }
+
   if (!req.headers.cookie) {
     return { accessToken: null, refreshToken: null };
   }
 
-  const { persist } = cookie.parse(req.headers.cookie);
+  const cookies = new Cookies(req, res);
+  const original = JSON.parse(decodeURIComponent(cookies.get('persist')))[
+    'token'
+  ];
+  const token = await refreshIfExpired(original);
+  if (token.exp !== original) {
+    console.log('SSR Refreshed');
+    cookies.set('persist', JSON.stringify({ token }), {
+      httpOnly: false,
+    });
+  }
 
-  return JSON.parse(persist)['token'];
+  req.token = token;
+
+  return token;
 }

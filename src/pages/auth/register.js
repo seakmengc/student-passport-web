@@ -21,23 +21,10 @@ import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 import { tokenState } from 'src/states/token';
 
-const Card = styled(MuiCard)(({ theme }) => ({
-  [theme.breakpoints.up('sm')]: { width: '28rem' },
-}));
-
 const LinkStyled = styled('a')(({ theme }) => ({
   fontSize: '0.875rem',
   textDecoration: 'none',
   color: theme.palette.primary.main,
-}));
-
-const FormControlLabel = styled(MuiFormControlLabel)(({ theme }) => ({
-  marginTop: theme.spacing(1.5),
-  marginBottom: theme.spacing(4),
-  '& .MuiFormControlLabel-label': {
-    fontSize: '0.875rem',
-    color: theme.palette.text.secondary,
-  },
 }));
 
 const schema = yup

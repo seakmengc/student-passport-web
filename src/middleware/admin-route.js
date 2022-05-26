@@ -1,4 +1,7 @@
+import { getRecoil } from 'recoil-nexus';
+import { authState } from 'src/states/auth';
 import { useGetApi } from 'src/utils/api';
+import { parseJwt } from 'src/utils/jwt';
 import { ssrGetToken } from 'src/utils/ssr';
 
 export const AdminRoute = (callback = null) => {
@@ -10,21 +13,13 @@ export const AdminRoute = (callback = null) => {
   };
 
   return async (ctx) => {
-    const { accessToken } = ssrGetToken(ctx.req);
+    const { accessToken } = await ssrGetToken(ctx);
 
     if (accessToken === null) {
       return redirectRes;
     }
 
-    const { data, error } = await useGetApi(
-      'auth/me/fields',
-      {
-        fields: 'role,email',
-      },
-      accessToken
-    );
-    console.log({ data });
-    if (error || !data.isAdmin) {
+    if (!parseJwt(accessToken).role?.endsWith('Admin')) {
       return redirectRes;
     }
 

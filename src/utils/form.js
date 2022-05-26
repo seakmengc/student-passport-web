@@ -8,7 +8,30 @@ export const registerField = (form, field) => {
   };
 };
 
+export const registerEditorJsField = (form, field) => {
+  const { name } = form.register(field);
+
+  return {
+    form,
+    name,
+    error: form.formState.errors[field]?.message ?? '',
+  };
+};
+
 export const registerCheckboxField = (form, field) => {
+  const { name } = form.register(field);
+
+  return {
+    register: {
+      onChange: (values) => {
+        form.setValue(name, values);
+      },
+    },
+    error: form.formState.errors[field]?.message ?? '',
+  };
+};
+
+export const registerSelectField = (form, field) => {
   const { name } = form.register(field);
 
   return {
@@ -29,8 +52,9 @@ export const setFormErrorFromApi = (form, data) => {
   }
 };
 
-export const useReactHookForm = (schema) => {
+export const useReactHookForm = (schema, defaultValues = {}) => {
   return useForm({
     resolver: yupResolver(schema),
+    defaultValues,
   });
 };
