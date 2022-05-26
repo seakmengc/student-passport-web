@@ -43,7 +43,7 @@ export const usePatchApi = async (path, data, token = null) => {
   return fetcher(path, {
     method: 'PATCH',
     accept: 'application/json',
-    body: data,
+    body: JSON.stringify(data),
     headers: {
       authorization:
         'Bearer ' + (token ?? getRecoil(tokenState).accessToken ?? ''),
@@ -61,6 +61,21 @@ export const useDeleteApi = async (path, data, token = null) => {
   return fetcher(`${path}?${query}`, {
     method: 'DELETE',
     accept: 'application/json',
+    headers: {
+      authorization:
+        'Bearer ' + (token ?? getRecoil(tokenState).accessToken ?? ''),
+    },
+  });
+};
+
+export const usePostUploadApi = async (file, token = null) => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  return fetcher('upload', {
+    method: 'POST',
+    accept: 'application/json',
+    body: formData,
     headers: {
       authorization:
         'Bearer ' + (token ?? getRecoil(tokenState).accessToken ?? ''),

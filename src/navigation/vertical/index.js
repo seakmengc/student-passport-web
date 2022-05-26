@@ -9,6 +9,9 @@ import CreditCardOutline from 'mdi-material-ui/CreditCardOutline';
 import AccountPlusOutline from 'mdi-material-ui/AccountPlusOutline';
 import AlertCircleOutline from 'mdi-material-ui/AlertCircleOutline';
 import GoogleCirclesExtended from 'mdi-material-ui/GoogleCirclesExtended';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
+import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 
 const navigation = () => {
   return [
@@ -27,13 +30,37 @@ const navigation = () => {
     },
     {
       title: 'List',
-      icon: Login,
-      path: '/users',
+      icon: ViewListIcon,
+      path: '/admin/users',
     },
     {
       title: 'Register',
-      icon: Login,
-      path: '/users/register',
+      icon: HowToRegIcon,
+      path: '/admin/users/register',
+    },
+    {
+      sectionTitle: 'Offices',
+    },
+    {
+      title: 'List',
+      icon: ViewListIcon,
+      path: '/admin/offices',
+    },
+    {
+      sectionTitle: 'Units',
+    },
+    {
+      title: 'List',
+      icon: ViewListIcon,
+      path: '/admin/units',
+    },
+    {
+      sectionTitle: 'Quests',
+    },
+    {
+      title: 'Approval',
+      icon: LibraryAddCheckIcon,
+      path: '/admin/quests/approval',
     },
     {
       sectionTitle: 'Pages',

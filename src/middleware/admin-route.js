@@ -24,7 +24,7 @@ export const AdminRoute = (callback = null) => {
       accessToken
     );
     console.log({ data });
-    if (error || !data.role?.endsWith('Admin')) {
+    if (error || !data.isAdmin) {
       return redirectRes;
     }
 
