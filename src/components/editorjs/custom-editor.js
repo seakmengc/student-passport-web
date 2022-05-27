@@ -165,10 +165,6 @@ const CustomEditor = (props) => {
     });
   };
 
-  function helloWorld() {
-    console.log('Hello');
-  }
-
   return (
     <div className='Editor_class' style={{ width: '100%' }}>
       <div id={EDITTOR_HOLDER_ID}></div>

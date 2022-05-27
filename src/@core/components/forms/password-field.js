@@ -1,4 +1,7 @@
+import { IconButton } from '@mui/material';
 import React, { useState } from 'react';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 export const PasswordField = ({ register, label, error = '' }) => {
   const hasError = error !== '';
@@ -10,16 +13,21 @@ export const PasswordField = ({ register, label, error = '' }) => {
         <label
           className={` uppercase ${
             hasError ? 'text-error-500' : 'text-label-600'
-          } mb-2 text-xs font-bold`}
+          } my-auto mb-2 text-xs font-bold`}
         >
           {label}
         </label>
-        <label
-          className='justify-end text-xs uppercase'
+        <IconButton
+          tabIndex={-1}
+          size='5'
           onClick={() => setShowPassword(!showPassword)}
         >
-          Show
-        </label>
+          {showPassword ? (
+            <VisibilityOffIcon fontSize='small' />
+          ) : (
+            <VisibilityIcon fontSize='small' />
+          )}
+        </IconButton>
       </div>
       <input
         type={showPassword ? 'text' : 'password'}

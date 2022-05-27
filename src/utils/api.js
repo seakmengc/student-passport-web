@@ -68,6 +68,18 @@ export const usePatchApi = async (path, data, token = null) => {
   });
 };
 
+export const usePutApi = async (path, data, token = null) => {
+  return fetcher(path, {
+    method: 'PUT',
+    accept: 'application/json',
+    body: JSON.stringify(data),
+    headers: {
+      authorization: 'Bearer ' + (token ?? (await getAccessToken()) ?? ''),
+      'content-type': 'application/json',
+    },
+  });
+};
+
 export const useDeleteApi = async (path, data, token = null) => {
   let query = '';
   for (const key in data) {
@@ -86,6 +98,7 @@ export const useDeleteApi = async (path, data, token = null) => {
 export const usePostUploadApi = async (file, token = null) => {
   const formData = new FormData();
   formData.append('file', file);
+  console.log({ file });
 
   return fetcher('upload', {
     method: 'POST',

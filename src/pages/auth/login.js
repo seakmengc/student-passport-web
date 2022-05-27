@@ -38,6 +38,7 @@ import { usePostApi, useUnauthPostApi } from 'src/utils/api';
 import { CardCenterLayout } from 'src/@core/layouts/CardCenterLayout';
 import { getRecoil } from 'recoil-nexus';
 import { authState } from 'src/states/auth';
+import { FormWrapper } from 'src/@core/components/forms/wrapper';
 
 // ** Styled Components
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -178,7 +179,7 @@ const LoginPage = () => {
           Please sign-in to your account and start the adventure
         </Typography>
       </Box>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <FormWrapper form={form} onSubmit={form.handleSubmit(onSubmit)}>
         <CustomTextField label='Email' {...registerField(form, 'email')} />
         <PasswordField label='Password' {...registerField(form, 'password')} />
         <Box
@@ -224,7 +225,7 @@ const LoginPage = () => {
             </Link>
           </Typography>
         </Box>
-      </form>
+      </FormWrapper>
     </>
   );
 };

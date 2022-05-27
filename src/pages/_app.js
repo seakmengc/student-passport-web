@@ -77,7 +77,8 @@ const App = (props) => {
         <SnackbarProvider
           maxSnack={3}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          autoHideDuration={3000}
+          autoHideDuration={1500}
+          variant='success'
         >
           <SettingsProvider>
             <SettingsConsumer>

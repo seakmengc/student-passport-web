@@ -150,7 +150,12 @@ const UserDropdown = () => {
           </Box>
         </MenuItem>
         <Divider />
-        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
+        <MenuItem
+          sx={{ p: 0 }}
+          onClick={() => {
+            router.push('/admin/account-settings');
+          }}
+        >
           <Box sx={styles}>
             <CogOutline sx={{ marginRight: 2 }} />
             Settings

@@ -7,17 +7,17 @@ export async function ssrGetToken({ req, res }) {
   }
 
   if (!req.headers.cookie) {
-    return { accessToken: null, refreshToken: null };
+    return { accessToken: null, refreshToken: null, exp: null };
   }
 
   const cookies = new Cookies(req, res);
-  const original = JSON.parse(decodeURIComponent(cookies.get('persist')))[
-    'token'
-  ];
+  const persist = JSON.parse(decodeURIComponent(cookies.get('persist')));
+  const original = persist['token'];
+
   const token = await refreshIfExpired(original);
   if (token.exp !== original) {
     console.log('SSR Refreshed');
-    cookies.set('persist', JSON.stringify({ token }), {
+    cookies.set('persist', JSON.stringify({ ...persist, token }), {
       httpOnly: false,
     });
   }
