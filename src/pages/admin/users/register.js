@@ -1,103 +1,97 @@
-// ** React Imports
-import { useState } from 'react';
-
-// ** MUI Imports
+import Link from 'next/link';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
-import TabContext from '@mui/lab/TabContext';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-import MuiTab from '@mui/material/Tab';
+import MuiCard from '@mui/material/Card';
+import MuiFormControlLabel from '@mui/material/FormControlLabel';
+import themeConfig from 'src/configs/themeConfig';
+import { CardCenterLayout } from 'src/@core/layouts/CardCenterLayout';
+import { FormWrapper } from 'src/@core/components/forms/wrapper';
+import { CustomTextField } from 'src/@core/components/forms/custom-text-field';
+import {
+  arrToIdData,
+  registerField,
+  registerSelectField,
+  setFormErrorFromApi,
+  useReactHookForm,
+} from 'src/utils/form';
+import * as yup from 'yup';
+import { PasswordField } from 'src/@core/components/forms/password-field';
+import { usePostApi } from 'src/utils/api';
+import { CustomChip } from 'src/@core/components/forms/custom-chip';
+import { CustomSingleChip } from 'src/@core/components/forms/custom-single-chip';
 
-// ** Icons Imports
-import AccountOutline from 'mdi-material-ui/AccountOutline';
-import LockOpenOutline from 'mdi-material-ui/LockOpenOutline';
-import InformationOutline from 'mdi-material-ui/InformationOutline';
+const roles = ['Student', 'Admin'];
+const schema = yup
+  .object({
+    firstName: yup.string().required(),
+    lastName: yup.string().required(),
+    email: yup.string().email().required(),
+    password: yup.string().min(8).required(),
+    role: yup.string().oneOf(roles).required(),
+  })
+  .required();
 
-// ** Demo Tabs Imports
-import TabInfo from 'src/views/account-settings/TabInfo';
-import TabAccount from 'src/views/account-settings/TabAccount';
-import TabSecurity from 'src/views/account-settings/TabSecurity';
+export default function RegisterPage() {
+  const form = useReactHookForm(schema);
 
-// ** Third Party Styles Imports
-import 'react-datepicker/dist/react-datepicker.css';
+  const onSubmit = async (input) => {
+    console.log({ input });
 
-const Tab = styled(MuiTab)(({ theme }) => ({
-  [theme.breakpoints.down('md')]: {
-    minWidth: 100,
-  },
-  [theme.breakpoints.down('sm')]: {
-    minWidth: 67,
-  },
-}));
+    const { data, error } = await usePostApi('user', input);
 
-const TabName = styled('span')(({ theme }) => ({
-  lineHeight: 1.71,
-  fontSize: '0.875rem',
-  marginLeft: theme.spacing(2.4),
-  [theme.breakpoints.down('md')]: {
-    display: 'none',
-  },
-}));
+    if (error) {
+      setFormErrorFromApi(form, data);
 
-const AccountSettings = () => {
-  // ** State
-  const [value, setValue] = useState('account');
+      return;
+    }
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+    form.setError('form', {
+      type: 'success',
+      message: `Registered ${data.email}`,
+    });
   };
 
   return (
-    <Card>
-      <TabContext value={value}>
-        <TabList
-          onChange={handleChange}
-          aria-label='account-settings tabs'
-          sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
-        >
-          <Tab
-            value='account'
-            label={
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <AccountOutline />
-                <TabName>Account</TabName>
-              </Box>
-            }
-          />
-          <Tab
-            value='security'
-            label={
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <LockOpenOutline />
-                <TabName>Security</TabName>
-              </Box>
-            }
-          />
-          <Tab
-            value='info'
-            label={
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <InformationOutline />
-                <TabName>Info</TabName>
-              </Box>
-            }
-          />
-        </TabList>
+    <>
+      <Box sx={{ mb: 6 }}>
+        <Typography variant='h5' sx={{ fontWeight: 600, marginBottom: 1.5 }}>
+          Register a User
+        </Typography>
+      </Box>
+      <FormWrapper form={form} onSubmit={onSubmit}>
+        <CustomTextField
+          label='First Name'
+          {...registerField(form, 'firstName')}
+        ></CustomTextField>
 
-        <TabPanel sx={{ p: 0 }} value='account'>
-          <TabAccount />
-        </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='security'>
-          <TabSecurity />
-        </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='info'>
-          <TabInfo />
-        </TabPanel>
-      </TabContext>
-    </Card>
+        <CustomTextField
+          label='Last Name'
+          {...registerField(form, 'lastName')}
+        ></CustomTextField>
+
+        <CustomTextField
+          label='Email'
+          {...registerField(form, 'email')}
+        ></CustomTextField>
+
+        <PasswordField
+          label='Password'
+          {...registerField(form, 'password')}
+        ></PasswordField>
+
+        <CustomSingleChip
+          label='Role'
+          idData={arrToIdData(roles)}
+          defaultSelected='Admin'
+          {...registerSelectField(form, 'role')}
+        ></CustomSingleChip>
+
+        <Button fullWidth size='large' type='submit' variant='contained'>
+          Register
+        </Button>
+      </FormWrapper>
+    </>
   );
-};
-
-export default AccountSettings;
+}

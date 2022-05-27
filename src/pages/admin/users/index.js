@@ -22,12 +22,16 @@ import {
   Button,
   IconButton,
   Tooltip,
+  Chip,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import router from 'next/router';
+import { CustomTextField } from 'src/@core/components/forms/custom-text-field';
+import { CustomSearchField } from 'src/@core/components/forms/custom-search-field';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -49,16 +53,51 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function UserList({ rows, pagination }) {
-  // ** State
-  const [value, setValue] = useState('account');
+export default function UserList() {
+  const [rows, setRows] = useState([]);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+  });
+
+  const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    onPageChange(null, 1);
+  }, [search]);
+
+  const onPageChange = async (_, page = 1) => {
+    const { data, error } = await useGetApi('user', {
+      page: page,
+      filter: search === '' ? '' : 'firstName=' + search,
+    });
+
+    setRows(data.data);
+    setPagination(data.pagination);
+  };
 
   return (
     <>
       <div className='mb-3 flex flex-row justify-end'>
-        <Button variant='contained' startIcon={<AddIcon />}>
+        <Button
+          size='medium'
+          variant='contained'
+          startIcon={<AddIcon />}
+          onClick={() => {
+            router.push('/admin/users/register');
+          }}
+        >
           Create
         </Button>
+      </div>
+
+      <div className='my-6 flex flex-col'>
+        <CustomSearchField
+          label='Search by First Name'
+          onChange={(val) => {
+            setSearch(val);
+          }}
+        ></CustomSearchField>
       </div>
 
       <div>
@@ -85,7 +124,13 @@ export default function UserList({ rows, pagination }) {
                   </StyledTableCell>
                   <StyledTableCell align='left'>{row.lastName}</StyledTableCell>
                   <StyledTableCell align='left'>{row.email}</StyledTableCell>
-                  <StyledTableCell align='left'>{row.role}</StyledTableCell>
+                  <StyledTableCell align='left'>
+                    <Chip
+                      label={row.role}
+                      color={row.role?.endsWith('Admin') ? 'primary' : 'info'}
+                      variant='filled'
+                    />
+                  </StyledTableCell>
                   <StyledTableCell align='right'>
                     <Tooltip title='Detail'>
                       <IconButton>
@@ -109,22 +154,21 @@ export default function UserList({ rows, pagination }) {
           </Table>
         </TableContainer>
         <br></br>
-        <Pagination
-          count={10}
-          color='primary'
-          className='flex flex-row justify-center'
-        />
+        {pagination && (
+          <Pagination
+            count={pagination.totalPages}
+            page={+pagination.currentPage}
+            onChange={onPageChange}
+            variant='outlined'
+            color='primary'
+            className='flex flex-row justify-center'
+            showFirstButton
+            showLastButton
+          />
+        )}
       </div>
     </>
   );
 }
 
-export const getServerSideProps = AdminRoute(async (ctx) => {
-  const { accessToken } = await ssrGetToken(ctx);
-
-  const { data, error } = await useGetApi('user', {}, accessToken);
-
-  return {
-    props: { rows: data.data, pagination: data.pagination },
-  };
-});
+export const getServerSideProps = AdminRoute();

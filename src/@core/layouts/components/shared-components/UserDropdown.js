@@ -25,6 +25,8 @@ import HelpCircleOutline from 'mdi-material-ui/HelpCircleOutline';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 import { setLogout, tokenState } from 'src/states/token';
 import { useDeleteApi } from 'src/utils/api';
+import { useRecoilValue } from 'recoil';
+import { authState } from 'src/states/auth';
 
 // ** Styled Components
 const BadgeContentSpan = styled('span')(({ theme }) => ({
@@ -39,6 +41,7 @@ const UserDropdown = () => {
   // ** States
   const [anchorEl, setAnchorEl] = useState(null);
   const resetTokenState = useResetRecoilState(tokenState);
+  const authStore = useRecoilValue(authState);
 
   // ** Hooks
   const router = useRouter();
@@ -60,6 +63,8 @@ const UserDropdown = () => {
     setLogout();
     router.replace('/auth/login');
   };
+
+  console.log({ authStore });
 
   const styles = {
     py: 2,
@@ -85,10 +90,10 @@ const UserDropdown = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
         <Avatar
-          alt='John Doe'
+          alt={authStore?.firstName}
           onClick={handleDropdownOpen}
           sx={{ width: 40, height: 40 }}
-          src='/images/avatars/1.png'
+          src={authStore?.profileUrl}
         />
       </Badge>
       <Menu
@@ -107,8 +112,8 @@ const UserDropdown = () => {
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             >
               <Avatar
-                alt='John Doe'
-                src='/images/avatars/1.png'
+                alt={authStore?.firstName}
+                src={authStore?.profileUrl}
                 sx={{ width: '2.5rem', height: '2.5rem' }}
               />
             </Badge>
@@ -120,12 +125,14 @@ const UserDropdown = () => {
                 flexDirection: 'column',
               }}
             >
-              <Typography sx={{ fontWeight: 600 }}>John Doe</Typography>
+              <Typography sx={{ fontWeight: 600 }}>
+                {authStore?.firstName}
+              </Typography>
               <Typography
                 variant='body2'
                 sx={{ fontSize: '0.8rem', color: 'text.disabled' }}
               >
-                Admin
+                {authStore?.role}
               </Typography>
             </Box>
           </Box>

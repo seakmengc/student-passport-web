@@ -45,10 +45,10 @@ export const registerSelectField = (form, field) => {
 };
 
 export const setFormErrorFromApi = (form, data) => {
-  form.setError('form', { type: 'api', message: data.message });
+  form.setError('form', { type: 'error', message: data.message });
 
   for (const key in data.errors) {
-    form.setError(key, { type: 'api', message: data.errors[key][0] });
+    form.setError(key, { type: 'error', message: data.errors[key][0] });
   }
 };
 
@@ -57,4 +57,11 @@ export const useReactHookForm = (schema, defaultValues = {}) => {
     resolver: yupResolver(schema),
     defaultValues,
   });
+};
+
+export const arrToIdData = (arr) => {
+  return arr.map((each) => ({
+    id: each,
+    data: each,
+  }));
 };
