@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useRef } from 'react';
+import { forwardRef, useEffect, useRef } from 'react';
 import EditorJS from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import LinkTool from '@editorjs/link';
@@ -6,31 +6,22 @@ import RawTool from '@editorjs/raw';
 // import SimpleImage from '@editorjs/simple-image';
 import ImageTool from '@editorjs/image';
 import Checklist from '@editorjs/checklist';
+import Table from '@editorjs/table';
 import List from '@editorjs/list';
 import Quote from '@editorjs/quote';
 import CodeTool from '@editorjs/code';
+import Embed from '@editorjs/embed';
+
 import { StyleInlineTool } from 'editorjs-style';
 import Tooltip from 'editorjs-tooltip';
 // import { CloudImage } from './UploadImage/CloudImage';
 import _ from 'lodash/debounce';
 import { usePostUploadApi } from 'src/utils/api';
 
-const DEFAULT_INITIAL_DATA = () => {
-  return {
-    time: new Date().getTime(),
-    blocks: [
-      {
-        id: '8FQQLWiDja',
-        type: 'paragraph',
-        data: { text: 'Start writing here !!!' },
-      },
-    ],
-  };
-};
 const EDITTOR_HOLDER_ID = 'editorjs';
 
 const CustomEditor = (props) => {
-  const { setContent, content, setSaveContent } = props;
+  const { setContent, content, setSaveContent, readOnly = false } = props;
 
   const isInstance = useRef(undefined);
 
@@ -64,21 +55,16 @@ const CustomEditor = (props) => {
   };
 
   //////////////////////////////////////////////////////////////////////////////////
-  const initEditor = (readOnly = false) => {
+  const initEditor = () => {
     const editor = new EditorJS({
       holder: EDITTOR_HOLDER_ID,
-      data: content === '' ? DEFAULT_INITIAL_DATA() : JSON.parse(content),
-      placeholder: 'Write here!',
-      readOnly: readOnly,
+      data: JSON.parse(content === '' ? '{}' : content),
+      placeholder: 'Let your beautiful idea flows here!',
       onReady: () => {
         console.log(editor);
         isInstance.current = editor;
       },
-      onChange: _(function () {
-        try {
-          contents();
-        } catch (err) {}
-      }, 3000),
+      readOnly,
       autofocus: true,
       tools: {
         style: StyleInlineTool,
@@ -102,8 +88,30 @@ const CustomEditor = (props) => {
           },
         },
 
-        raw: RawTool,
-        linkTool: LinkTool,
+        embed: {
+          class: Embed,
+          inlineToolbar: true,
+          config: {
+            services: {
+              youtube: true,
+              facebook: true,
+            },
+          },
+        },
+        linkTool: {
+          class: LinkTool,
+          config: {
+            endpoint: '/api/fetch-url', // Your backend endpoint for url data fetching,
+          },
+        },
+        checklist: Checklist,
+        table: {
+          class: Table,
+          inlineToolbar: true,
+          config: {
+            withHeadings: true,
+          },
+        },
         image: {
           class: ImageTool,
           config: {
@@ -122,10 +130,6 @@ const CustomEditor = (props) => {
           },
         },
 
-        checklist: {
-          class: Checklist,
-          inlineToolbar: true,
-        },
         list: {
           class: List,
           inlineToolbar: true,
@@ -149,25 +153,22 @@ const CustomEditor = (props) => {
       },
     });
 
-    async function contents() {
-      console.log('setContent');
-      const output = await editor.save();
-      const content = JSON.stringify(output);
-      setContent(content);
-      console.log({ output });
-    }
-
     setSaveContent({
-      callback: () => {
+      callback: async () => {
         console.log('setContent from callback');
-        contents();
+
+        const output = await editor.save();
+        const content = JSON.stringify(output);
+        setContent(content);
+
+        return content;
       },
     });
   };
 
   return (
-    <div className='Editor_class' style={{ width: '100%' }}>
-      <div id={EDITTOR_HOLDER_ID}></div>
+    <div id='reset-this' className='Editor_class' style={{ width: '100%' }}>
+      <div id={EDITTOR_HOLDER_ID} style={{ h1: {} }}></div>
     </div>
   );
 };

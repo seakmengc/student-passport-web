@@ -15,7 +15,7 @@ export const CustomEditorJs = ({
   error = '',
 }) => {
   const hasError = error !== '';
-  const [content, setContent] = useState(form.getValues()['description'] ?? '');
+  const [content, setContent] = useState(form.getValues()[name] ?? '');
 
   return (
     <div className='relative mb-3 w-full'>
@@ -29,8 +29,13 @@ export const CustomEditorJs = ({
       <div className='border-primary-600 border-2'>
         <CustomEditor
           setContent={(val) => {
-            console.log(val);
             form.setValue(name, val);
+            console.log(
+              'val from editjs',
+              JSON.parse(val),
+              name,
+              form.getValues()[name]
+            );
             setContent(val);
           }}
           content={content}

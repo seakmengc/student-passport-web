@@ -1,12 +1,12 @@
 // ** React Imports
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import TableBody from '@mui/material/TableBody';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 // ** Icons Imports
 
 // ** Demo Tabs Imports
-import { useGetApi } from 'src/utils/api';
+import { useDeleteApi, useGetApi } from 'src/utils/api';
 
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css';
@@ -21,6 +21,8 @@ import {
   Button,
   IconButton,
   Tooltip,
+  Typography,
+  Card,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -29,6 +31,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import { AdminRoute } from 'src/middleware/admin-route';
 import { useRouter } from 'next/router';
+import { CustomSearchField } from 'src/@core/components/forms/custom-search-field';
+import { ConfirmationDialog } from 'src/@core/components/alerts/confirmation-dialog';
+import { Popover } from '@nextui-org/react';
+import { CrudActions } from 'src/@core/components/tables/crud-actions';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -50,15 +56,53 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function OfficeList({ rows, pagination }) {
+export default function OfficeList() {
   const router = useRouter();
+  const [rows, setRows] = useState([]);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+  });
+
+  const [search, setSearch] = useState('');
+  const [reload, setReload] = useState(false);
+
+  useEffect(() => {
+    onPageChange(null, pagination.currentPage ?? 1);
+    reload = false;
+  }, [search, reload]);
+
+  const onPageChange = async (_, page = 1) => {
+    const { data, error } = await useGetApi('office', {
+      page: page,
+      filter: search === '' ? '' : 'name=' + search,
+    });
+
+    setRows(data.data);
+    setPagination(data.pagination);
+  };
 
   return (
     <>
       <div className='mb-3 flex flex-row justify-end'>
-        <Button variant='contained' startIcon={<AddIcon />}>
+        <Button
+          variant='contained'
+          startIcon={<AddIcon />}
+          onClick={() => {
+            router.push('/admin/offices/create');
+          }}
+        >
           Create
         </Button>
+      </div>
+
+      <div className='my-6 flex flex-col'>
+        <CustomSearchField
+          label='Search by Office Name'
+          onChange={(val) => {
+            setSearch(val);
+          }}
+        ></CustomSearchField>
       </div>
 
       <div>
@@ -83,7 +127,24 @@ export default function OfficeList({ rows, pagination }) {
                     {row.admins.length}
                   </StyledTableCell>
                   <StyledTableCell align='right'>
-                    <Tooltip title='Detail'>
+                    <CrudActions
+                      nameIdentifier={row.name}
+                      onShowClick={() => {
+                        router.push('/admin/offices/' + row._id + '/detail');
+                      }}
+                      onEditClick={() => {
+                        router.push('/admin/offices/' + row._id);
+                      }}
+                      onDeleteClick={async () => {
+                        const { data, error } = await useDeleteApi(
+                          'office/' + row._id
+                        );
+
+                        setReload(true);
+                      }}
+                    ></CrudActions>
+
+                    {/* <Tooltip title='Detail'>
                       <IconButton
                         onClick={() => {
                           console.log(row);
@@ -102,10 +163,59 @@ export default function OfficeList({ rows, pagination }) {
                       </IconButton>
                     </Tooltip>
                     <Tooltip title='Delete'>
-                      <IconButton>
+                      <IconButton
+                        onClick={async () => {
+                          // const { data, error } = await useDeleteApi(
+                          //   'office/' + row._id
+                          // );
+                          console.log(dialogRef.current);
+                        }}
+                      >
                         <DeleteIcon color='error'></DeleteIcon>
                       </IconButton>
                     </Tooltip>
+
+                    <ConfirmationDialog state={true}></ConfirmationDialog>
+
+                    <Popover>
+                      <Popover.Trigger>
+                        <IconButton
+                          onClick={async () => {
+                            // const { data, error } = await useDeleteApi(
+                            //   'office/' + row._id
+                            // );
+                          }}
+                        >
+                          <DeleteIcon color='error'></DeleteIcon>
+                        </IconButton>
+                      </Popover.Trigger>
+                      <Popover.Content>
+                        <div className='p-3'>
+                          <Typography variant='body'>
+                            Are you sure want to delete{' '}
+                            <i>
+                              <b>{row.name}</b>
+                            </i>
+                            ?
+                          </Typography>
+
+                          <div className='my-3 flex flex-row justify-between'>
+                            <Button className='w-full'>No</Button>
+                            <Button
+                              className='w-full'
+                              variant='contained'
+                              color='error'
+                            >
+                              Yes
+                            </Button>
+                          </div>
+
+                          <Typography variant='caption'>
+                            * This action cannot be undone!
+                          </Typography>
+                        </div>
+                      </Popover.Content>
+                    </Popover> */}
                   </StyledTableCell>
                 </StyledTableRow>
               ))}
@@ -113,24 +223,21 @@ export default function OfficeList({ rows, pagination }) {
           </Table>
         </TableContainer>
         <br></br>
-        <Pagination
-          count={10}
-          color='primary'
-          className='flex flex-row justify-center'
-        />
+        {pagination && (
+          <Pagination
+            count={pagination.totalPages}
+            page={+pagination.currentPage}
+            onChange={onPageChange}
+            variant='outlined'
+            color='primary'
+            className='flex flex-row justify-center'
+            showFirstButton
+            showLastButton
+          />
+        )}
       </div>
     </>
   );
 }
 
-export const getServerSideProps = AdminRoute(async (ctx) => {
-  const { accessToken } = await ssrGetToken(ctx);
-
-  const { data, error } = await useGetApi('office', {}, accessToken);
-
-  console.log(data);
-
-  return {
-    props: { rows: data.data ?? [], pagination: data.pagination ?? {} },
-  };
-});
+export const getServerSideProps = AdminRoute();

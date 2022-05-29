@@ -47,6 +47,7 @@ export const CustomChip = ({
   idData,
   register,
   label,
+  getAvatar,
   defaultSelected = [],
   error = '',
 }) => {
@@ -66,10 +67,7 @@ export const CustomChip = ({
   };
 
   return (
-    <FormControl
-      sx={{ m: 1, width: '100%', mt: 3 }}
-      className='relative mb-3 w-full'
-    >
+    <FormControl sx={{ my: 3, width: '100%' }}>
       <label
         className={`block uppercase ${
           hasError ? 'text-error-500' : 'text-primary-600'
@@ -102,6 +100,7 @@ export const CustomChip = ({
               {selected.map((value) => (
                 <Chip
                   key={value}
+                  avatar={getAvatar ? getAvatar(value) : null}
                   label={idData.find((each) => each.id === value).data}
                 />
               ))}
