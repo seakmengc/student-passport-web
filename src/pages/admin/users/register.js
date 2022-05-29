@@ -21,6 +21,7 @@ import { PasswordField } from 'src/@core/components/forms/password-field';
 import { usePostApi } from 'src/utils/api';
 import { CustomChip } from 'src/@core/components/forms/custom-chip';
 import { CustomSingleChip } from 'src/@core/components/forms/custom-single-chip';
+import { AdminRoute } from 'src/middleware/admin-route';
 
 const roles = ['Student', 'Admin'];
 const schema = yup
@@ -95,3 +96,5 @@ export default function RegisterPage() {
     </>
   );
 }
+
+export const getServerSideProps = AdminRoute();

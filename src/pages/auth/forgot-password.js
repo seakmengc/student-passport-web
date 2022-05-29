@@ -24,6 +24,7 @@ import {
 import * as yup from 'yup';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { AuthRoute } from 'src/middleware/auth-route';
 
 const schema = yup
   .object({
@@ -182,3 +183,5 @@ ForgotPassword.getLayout = (page) => (
 );
 
 export default ForgotPassword;
+
+export const getServerSideProps = AuthRoute();

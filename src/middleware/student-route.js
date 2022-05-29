@@ -5,7 +5,7 @@ import {
   throwRedirectError,
 } from 'src/utils/ssr';
 
-export const AdminRoute = (callback = null) => {
+export const StudentRoute = (callback = null) => {
   return ssrCallbackHandler(async (ctx) => {
     const { accessToken } = await ssrGetToken(ctx);
 
@@ -14,10 +14,10 @@ export const AdminRoute = (callback = null) => {
       throwRedirectError('/auth/login');
     }
 
-    if (!jwtPayload.role.endsWith('Admin')) {
+    if (jwtPayload.role !== 'Student') {
       return {
         redirect: {
-          destination: '/',
+          destination: '/admin',
           permanent: false,
         },
       };

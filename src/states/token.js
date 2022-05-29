@@ -3,6 +3,8 @@ import { resetRecoil, setRecoil, getRecoil } from 'recoil-nexus';
 import { fetcher } from 'src/utils/api';
 import { useEffectPersisAtom } from 'src/utils/atom-effect';
 import { parseJwt } from 'src/utils/jwt';
+import { throwRedirectError } from 'src/utils/ssr';
+import Cookies from 'cookies';
 import { authState, setAuth } from './auth';
 
 export const tokenState = atom({
@@ -32,8 +34,6 @@ export const refreshIfExpired = async ({ exp, refreshToken, accessToken }) => {
     return { exp, refreshToken, accessToken };
   }
 
-  console.log('Refreshing token', typeof window);
-
   const { data, error } = await fetcher('auth/refresh-token', {
     method: 'POST',
     accept: 'application/json',
@@ -46,9 +46,7 @@ export const refreshIfExpired = async ({ exp, refreshToken, accessToken }) => {
   });
 
   if (error) {
-    console.error({ data });
-    setLogout();
-    return {};
+    throwRedirectError('/auth/login');
   }
 
   const rtn = {
@@ -61,10 +59,18 @@ export const refreshIfExpired = async ({ exp, refreshToken, accessToken }) => {
   return rtn;
 };
 
-export const setLogout = () => {
+export const setLogout = (ctx = null) => {
   resetRecoil(tokenState);
 
   resetRecoil(authState);
+
+  //ssr
+  if (typeof window === 'undefined' && ctx !== null) {
+    const cookies = new Cookies(ctx.req, ctx.res);
+    cookies.set('persist', JSON.stringify({}), {
+      httpOnly: false,
+    });
+  }
 };
 
 export const getAccessToken = async () => {

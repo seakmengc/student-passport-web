@@ -8,7 +8,7 @@ export const AlertCommon = ({ msg, onClose, error = false }) => {
   }
 
   return (
-    <Collapse in={open}>
+    <Collapse>
       <Alert
         variant='filled'
         severity={error ? 'error' : 'success'}

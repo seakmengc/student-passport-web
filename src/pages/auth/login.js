@@ -39,6 +39,7 @@ import { CardCenterLayout } from 'src/@core/layouts/CardCenterLayout';
 import { getRecoil } from 'recoil-nexus';
 import { authState } from 'src/states/auth';
 import { FormWrapper } from 'src/@core/components/forms/wrapper';
+import { AuthRoute } from 'src/middleware/auth-route';
 
 // ** Styled Components
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -232,3 +233,5 @@ const LoginPage = () => {
 LoginPage.getLayout = (page) => <CardCenterLayout>{page}</CardCenterLayout>;
 
 export default LoginPage;
+
+export const getServerSideProps = AuthRoute();

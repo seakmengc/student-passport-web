@@ -25,6 +25,7 @@ import { useGetApi } from 'src/utils/api';
 import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { authState } from 'src/states/auth';
+import { StudentRoute } from 'src/middleware/student-route';
 
 const Dashboard = () => {
   const auth = useRecoilValue(authState);
@@ -112,3 +113,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+export const getServerSideProps = StudentRoute();

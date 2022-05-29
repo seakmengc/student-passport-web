@@ -52,7 +52,7 @@ const OfficeDetail = ({ office, admins }) => {
 
     enqueueSnackbar('Office Saved!', { variant: 'success' });
 
-    // router.push('/admin/offices');
+    router.push('/admin/offices');
   };
 
   return (

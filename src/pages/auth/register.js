@@ -20,6 +20,7 @@ import { usePostApi } from 'src/utils/api';
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 import { tokenState } from 'src/states/token';
+import { AuthRoute } from 'src/middleware/auth-route';
 
 const LinkStyled = styled('a')(({ theme }) => ({
   fontSize: '0.875rem',
@@ -142,3 +143,5 @@ const RegisterPage = () => {
 RegisterPage.getLayout = (page) => <CardCenterLayout>{page}</CardCenterLayout>;
 
 export default RegisterPage;
+
+export const getServerSideProps = AuthRoute();
