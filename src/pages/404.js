@@ -1,5 +1,6 @@
 // ** Next Import
 import Link from 'next/link';
+import Image from 'next/image';
 
 // ** MUI Components
 import Button from '@mui/material/Button';
@@ -61,13 +62,21 @@ const Error404 = () => {
             variant='h5'
             sx={{ mb: 1, fontSize: '1.5rem !important' }}
           >
-            Page Not Found ⚠️
+            Resource or Page Not Found ⚠️
           </Typography>
-          <Typography variant='body2'>
-            We couldn&prime;t find the page you are looking for.
+          <Typography variant='caption'>
+            This might happen due to resource has been deleted or invalid url.
           </Typography>
         </BoxWrapper>
-        <Img alt='error-illustration' src='/images/pages/404.png' />
+        <div className='h-1/4 w-1/2'>
+          <Image
+            alt='error-illustration'
+            src='/images/pages/404.png'
+            width={1500}
+            height={1000}
+            layout='intrinsic'
+          />
+        </div>
         <Link passHref href='/'>
           <Button component='a' variant='contained' sx={{ px: 5.5 }}>
             Back to Home

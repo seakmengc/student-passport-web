@@ -60,12 +60,15 @@ export const refreshIfExpired = async ({ exp, refreshToken, accessToken }) => {
 };
 
 export const setLogout = (ctx = null) => {
-  resetRecoil(tokenState);
-
-  resetRecoil(authState);
+  //client
+  if (typeof window !== 'undefined') {
+    resetRecoil(tokenState);
+    resetRecoil(authState);
+  }
 
   //ssr
-  if (typeof window === 'undefined' && ctx !== null) {
+
+  if (ctx != null) {
     const cookies = new Cookies(ctx.req, ctx.res);
     cookies.set('persist', JSON.stringify({}), {
       httpOnly: false,

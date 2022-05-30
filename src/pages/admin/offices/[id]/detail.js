@@ -6,21 +6,16 @@ import { useRouter } from 'next/router';
 import { Typography } from '@mui/material';
 import { CustomViewEditorJs } from 'src/@core/components/forms/custom-view-editorjs';
 import dynamic from 'next/dynamic';
+import moment from 'moment';
+import { ssrGetToken } from 'src/utils/ssr';
 
 const Output = dynamic(
   async () => (await import('editorjs-react-renderer')).default,
   { ssr: false }
 );
 
-export default function OfficeDetail() {
-  const [office, setOffice] = useState({});
+export default function OfficeDetail({ office }) {
   const router = useRouter();
-
-  useEffect(async () => {
-    const { data, error } = await useGetApi('office/' + router.query.id);
-
-    setOffice(data);
-  }, []);
 
   return (
     <div className='mx-auto w-3/4'>
@@ -33,7 +28,7 @@ export default function OfficeDetail() {
       <div className='mb-4 flex flex-row justify-start'>
         <Typography variant='caption'>
           Last Updated:{' '}
-          {office.updatedAt && new Date(office.updatedAt).toLocaleString()}
+          {office.updatedAt && moment(office.updatedAt).calendar()}
         </Typography>
       </div>
 
@@ -89,4 +84,16 @@ export default function OfficeDetail() {
   );
 }
 
-export const getServerSideProps = AdminRoute();
+export const getServerSideProps = AdminRoute(async (ctx) => {
+  const { accessToken } = await ssrGetToken(ctx);
+
+  const { data, error } = await useGetApi(
+    'office/' + ctx.params.id,
+    {},
+    accessToken
+  );
+
+  return {
+    props: { office: data },
+  };
+});

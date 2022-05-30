@@ -110,7 +110,6 @@ const OfficeDetail = ({ office, admins }) => {
 export const getServerSideProps = AdminRoute(async (ctx) => {
   const { accessToken } = await ssrGetToken(ctx);
 
-  console.log(ctx.params);
   const { data, error } = await useGetApi(
     'office/' + ctx.params.id,
     {},
@@ -118,8 +117,6 @@ export const getServerSideProps = AdminRoute(async (ctx) => {
   );
 
   const admins = await useGetApi('user/admin', {}, accessToken);
-
-  console.log(admins.data);
 
   return {
     props: { office: data, admins: admins.data },

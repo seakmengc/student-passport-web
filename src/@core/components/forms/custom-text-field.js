@@ -1,5 +1,3 @@
-import React from 'react';
-
 export const CustomTextField = ({
   register,
   label,
@@ -21,7 +19,7 @@ export const CustomTextField = ({
         type={type}
         className={`${
           !hasError ? 'border-0' : 'border-2 border-error-500'
-        } text-primary-600 placeholder-primary-300 w-full rounded bg-white px-3 py-3 text-sm shadow ring-primary transition-all duration-150 ease-linear  focus:outline-none focus:ring`}
+        } w-full rounded px-3 py-3 text-sm text-black shadow ring-primary transition-all duration-150 ease-linear focus:outline-none focus:ring`}
         placeholder={label}
         {...register}
       />

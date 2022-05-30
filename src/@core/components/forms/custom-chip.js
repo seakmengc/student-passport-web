@@ -3,6 +3,7 @@ import {
   Chip,
   FormControl,
   InputLabel,
+  ListItem,
   MenuItem,
   OutlinedInput,
   Select,
@@ -89,22 +90,30 @@ export const CustomChip = ({
         displayEmpty
         value={selected}
         onChange={handleChange}
-        input={<OutlinedInput />}
+        input={<OutlinedInput notched={true} />}
         renderValue={(selected) => {
           if (selected.length === 0) {
             return <em>Select Admins</em>;
           }
 
           return (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+            <ListItem
+              sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, p: 0 }}
+            >
               {selected.map((value) => (
                 <Chip
                   key={value}
                   avatar={getAvatar ? getAvatar(value) : null}
                   label={idData.find((each) => each.id === value).data}
+                  variant='filled'
+                  className='text-black'
+                  color='secondary'
+                  onDelete={() => {
+                    console.log('On Delete');
+                  }}
                 />
               ))}
-            </Box>
+            </ListItem>
           );
         }}
         MenuProps={MenuProps}

@@ -167,7 +167,11 @@ const CustomEditor = (props) => {
   };
 
   return (
-    <div id='reset-this' className='Editor_class' style={{ width: '100%' }}>
+    <div
+      id='reset-this'
+      className='Editor_class text-black'
+      style={{ width: '100%' }}
+    >
       <div id={EDITTOR_HOLDER_ID} style={{ h1: {} }}></div>
     </div>
   );

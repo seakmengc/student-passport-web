@@ -26,7 +26,7 @@ export const CustomEditorJs = ({
       >
         {label}
       </label>
-      <div className='border-primary-600 border-2'>
+      <div className='border-primary-600 rounded-md border-2 bg-white shadow-sm'>
         <CustomEditor
           setContent={(val) => {
             form.setValue(name, val);

@@ -1,16 +1,16 @@
-import {
-  getAccessToken,
-  setRefreshToken,
-  tokenState,
-  useTokenState,
-} from 'src/states/token';
-import { getRecoil, getRecoilPromise } from 'recoil-nexus';
-import { parseJwt } from './jwt';
+import { getAccessToken } from 'src/states/token';
 
 const baseUrl = process.env.NEXT_PUBLIC_API_BASEURL;
 
 export const fetcher = (url, init) => {
   return fetch(baseUrl + url, init).then(async (res) => {
+    if (typeof window === 'undefined') {
+      console.log(res.status);
+      if (res.status === 404) {
+        throw 'Resource not found';
+      }
+    }
+
     return {
       data: res.status === 204 ? null : await res.json(),
       error: !res.ok,

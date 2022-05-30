@@ -12,14 +12,13 @@ export const PasswordField = ({ register, label, error = '' }) => {
       <div className='flex flex-row'>
         <label
           className={` uppercase ${
-            hasError ? 'text-error-500' : 'text-label-600'
+            hasError ? 'text-error-500' : 'text-black-600'
           } my-auto mb-2 text-xs font-bold`}
         >
           {label}
         </label>
         <IconButton
           tabIndex={-1}
-          size='5'
           onClick={() => setShowPassword(!showPassword)}
         >
           {showPassword ? (
@@ -33,7 +32,7 @@ export const PasswordField = ({ register, label, error = '' }) => {
         type={showPassword ? 'text' : 'password'}
         className={`${
           !hasError ? 'border-0' : 'border-2 border-error-500'
-        } text-primary-600 placeholder-primary-300 w-full rounded bg-white px-3 py-3 text-sm shadow outline-primary transition-all duration-150 ease-linear focus:outline-none focus:ring`}
+        } placeholder-primary-300 w-full rounded bg-white px-3 py-3 text-sm text-black shadow outline-primary transition-all duration-150 ease-linear focus:outline-none focus:ring`}
         placeholder={label}
         {...register}
       />
