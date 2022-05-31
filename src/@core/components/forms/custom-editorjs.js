@@ -12,6 +12,8 @@ export const CustomEditorJs = ({
   name,
   label,
   setSaveContent,
+  minHeight = 300,
+  placeHolderText = 'Let your beautiful idea flows here!',
   error = '',
 }) => {
   const hasError = error !== '';
@@ -28,6 +30,8 @@ export const CustomEditorJs = ({
       </label>
       <div className='border-primary-600 rounded-md border-2 bg-white shadow-sm'>
         <CustomEditor
+          minHeight={minHeight}
+          placeHolderText={placeHolderText}
           setContent={(val) => {
             form.setValue(name, val);
             console.log(

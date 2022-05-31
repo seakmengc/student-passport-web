@@ -31,13 +31,17 @@ export const registerCheckboxField = (form, field) => {
   };
 };
 
-export const registerSelectField = (form, field) => {
+export const registerSelectField = (form, field, callback = null) => {
   const { name } = form.register(field);
 
   return {
     register: {
-      onChange: (isChecked) => {
-        form.setValue(name, isChecked);
+      onChange: (val) => {
+        form.setValue(name, val);
+
+        if (callback) {
+          callback(val);
+        }
       },
     },
     error: form.formState.errors[field]?.message ?? '',

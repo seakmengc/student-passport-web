@@ -149,7 +149,7 @@ export const CustomSingleChip = ({
             key={each.id}
             value={each.id}
             control={<BpRadio />}
-            label={each.id}
+            label={each.data}
           />
         ))}
       </RadioGroup>

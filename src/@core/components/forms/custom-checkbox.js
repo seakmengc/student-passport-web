@@ -15,8 +15,18 @@ export const CustomCheckbox = ({ register, label, error = '' }) => {
 
   return (
     <div>
-      <FormControlLabel control={<Checkbox />} label={label} {...register} />
-
+      <FormControlLabel
+        control={<Checkbox defaultChecked={true} />}
+        label={label}
+        {...register}
+      />
+      {/* <span
+        className={`${
+          hasError ? 'text-error-600' : 'text-primary-600'
+        } ml-2 text-sm font-semibold `}
+      >
+        {error}
+      </span> */}
       {/* <label className='inline-flex cursor-pointer items-center'>
         <input
           type='checkbox'

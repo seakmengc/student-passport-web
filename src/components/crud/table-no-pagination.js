@@ -49,9 +49,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
  *  }
  * ]
  */
-export const CrudTable = ({
+export const CrudTableNoPagination = ({
   indexEndpoint,
-  getSearchQuery,
   cols,
   onCreateClick,
   onEditClick,
@@ -63,28 +62,21 @@ export const CrudTable = ({
   searchLabel = 'Search',
 }) => {
   const [rows, setRows] = useState([]);
-  const [pagination, setPagination] = useState({
-    currentPage: 1,
-    totalPages: 1,
-  });
 
   const [search, setSearch] = useState('');
-  const [reload, setReload] = useState(false);
   const [alert, setAlert] = useState(null);
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
-    onPageChange(null, pagination.currentPage ?? 1);
+    onPageChange();
 
     if (reload) {
       reload = false;
     }
-  }, [search, reload]);
+  }, [reload]);
 
-  const onPageChange = async (_, page = 1) => {
-    const { data, error } = await useGetApi(indexEndpoint, {
-      page: page,
-      filter: getSearchQuery(search),
-    });
+  const onPageChange = async () => {
+    const { data, error } = await useGetApi(indexEndpoint);
 
     if (formatData) {
       data = formatData(data);
@@ -98,8 +90,7 @@ export const CrudTable = ({
       return;
     }
 
-    setRows(data.data);
-    setPagination(data.pagination);
+    setRows(data);
   };
 
   return (
@@ -175,7 +166,7 @@ export const CrudTable = ({
                       onDeleteClick={async () => {
                         await onDeleteClick(row);
 
-                        setReload(true);
+                        setRows(rows.filter((each) => each._id !== row._id));
                       }}
                     ></CrudActions>
                   </StyledTableCell>
@@ -184,19 +175,6 @@ export const CrudTable = ({
             </TableBody>
           </Table>
         </TableContainer>
-        <br></br>
-        {pagination && (
-          <Pagination
-            count={pagination.totalPages}
-            page={+pagination.currentPage}
-            onChange={onPageChange}
-            variant='outlined'
-            color='primary'
-            className='flex flex-row justify-center'
-            showFirstButton
-            showLastButton
-          />
-        )}
       </div>
     </>
   );

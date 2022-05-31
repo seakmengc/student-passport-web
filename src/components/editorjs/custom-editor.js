@@ -21,7 +21,14 @@ import { usePostUploadApi } from 'src/utils/api';
 const EDITTOR_HOLDER_ID = 'editorjs';
 
 const CustomEditor = (props) => {
-  const { setContent, content, setSaveContent, readOnly = false } = props;
+  const {
+    setContent,
+    content,
+    setSaveContent,
+    minHeight,
+    placeHolderText,
+    readOnly = false,
+  } = props;
 
   const isInstance = useRef(undefined);
 
@@ -59,7 +66,8 @@ const CustomEditor = (props) => {
     const editor = new EditorJS({
       holder: EDITTOR_HOLDER_ID,
       data: JSON.parse(content === '' ? '{}' : content),
-      placeholder: 'Let your beautiful idea flows here!',
+      placeholder: placeHolderText,
+      minHeight: minHeight,
       onReady: () => {
         console.log(editor);
         isInstance.current = editor;
@@ -167,12 +175,8 @@ const CustomEditor = (props) => {
   };
 
   return (
-    <div
-      id='reset-this'
-      className='Editor_class text-black'
-      style={{ width: '100%' }}
-    >
-      <div id={EDITTOR_HOLDER_ID} style={{ h1: {} }}></div>
+    <div className='Editor_class text-black' style={{ width: '100%' }}>
+      <div id={EDITTOR_HOLDER_ID}></div>
     </div>
   );
 };

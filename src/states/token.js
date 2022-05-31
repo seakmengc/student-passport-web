@@ -6,6 +6,7 @@ import { parseJwt } from 'src/utils/jwt';
 import { throwRedirectError } from 'src/utils/ssr';
 import Cookies from 'cookies';
 import { authState, setAuth } from './auth';
+import { isInServerSide } from 'src/utils/ssr';
 
 export const tokenState = atom({
   key: 'token',
@@ -54,7 +55,9 @@ export const refreshIfExpired = async ({ exp, refreshToken, accessToken }) => {
     exp: (parseJwt(data.accessToken).exp - 30) * 1000,
   };
 
-  setRecoil(tokenState, rtn);
+  if (!isInServerSide()) {
+    setRecoil(tokenState, rtn);
+  }
 
   return rtn;
 };

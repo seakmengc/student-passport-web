@@ -79,3 +79,7 @@ export function throwRedirectError(destination, clearCreds = true) {
     clearCreds,
   };
 }
+
+export function isInServerSide() {
+  return typeof window === 'undefined';
+}
