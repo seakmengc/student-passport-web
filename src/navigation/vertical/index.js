@@ -12,6 +12,9 @@ import GoogleCirclesExtended from 'mdi-material-ui/GoogleCirclesExtended';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
+import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 
 const navigation = () => {
   return [
@@ -42,75 +45,74 @@ const navigation = () => {
       sectionTitle: 'Offices',
     },
     {
-      title: 'List',
-      icon: ViewListIcon,
+      title: 'Offices',
+      icon: ApartmentIcon,
       path: '/admin/offices',
     },
     {
-      sectionTitle: 'Units',
-    },
-    {
-      title: 'List',
-      icon: ViewListIcon,
+      title: 'Units',
+      icon: LocalLibraryIcon,
       path: '/admin/units',
     },
     {
-      sectionTitle: 'Quests',
+      title: 'Quests',
+      icon: QuestionAnswerIcon,
+      path: '/admin/quests',
     },
     {
       title: 'Approval',
       icon: LibraryAddCheckIcon,
       path: '/admin/quests/approval',
     },
-    {
-      sectionTitle: 'Pages',
-    },
-    {
-      title: 'Login',
-      icon: Login,
-      path: '/auth/login',
-      openInNewTab: true,
-    },
-    {
-      title: 'Register',
-      icon: AccountPlusOutline,
-      path: '/auth/register',
-      openInNewTab: true,
-    },
-    {
-      title: 'Error',
-      icon: AlertCircleOutline,
-      path: '/pages/error',
-      openInNewTab: true,
-    },
-    {
-      sectionTitle: 'User Interface',
-    },
-    {
-      title: 'Typography',
-      icon: FormatLetterCase,
-      path: '/typography',
-    },
-    {
-      title: 'Icons',
-      path: '/icons',
-      icon: GoogleCirclesExtended,
-    },
-    {
-      title: 'Cards',
-      icon: CreditCardOutline,
-      path: '/cards',
-    },
-    {
-      title: 'Tables',
-      icon: Table,
-      path: '/tables',
-    },
-    {
-      icon: CubeOutline,
-      title: 'Form Layouts',
-      path: '/form-layouts',
-    },
+    // {
+    //   sectionTitle: 'Pages',
+    // },
+    // {
+    //   title: 'Login',
+    //   icon: Login,
+    //   path: '/auth/login',
+    //   openInNewTab: true,
+    // },
+    // {
+    //   title: 'Register',
+    //   icon: AccountPlusOutline,
+    //   path: '/auth/register',
+    //   openInNewTab: true,
+    // },
+    // {
+    //   title: 'Error',
+    //   icon: AlertCircleOutline,
+    //   path: '/pages/error',
+    //   openInNewTab: true,
+    // },
+    // {
+    //   sectionTitle: 'User Interface',
+    // },
+    // {
+    //   title: 'Typography',
+    //   icon: FormatLetterCase,
+    //   path: '/typography',
+    // },
+    // {
+    //   title: 'Icons',
+    //   path: '/icons',
+    //   icon: GoogleCirclesExtended,
+    // },
+    // {
+    //   title: 'Cards',
+    //   icon: CreditCardOutline,
+    //   path: '/cards',
+    // },
+    // {
+    //   title: 'Tables',
+    //   icon: Table,
+    //   path: '/tables',
+    // },
+    // {
+    //   icon: CubeOutline,
+    //   title: 'Form Layouts',
+    //   path: '/form-layouts',
+    // },
   ];
 };
 
