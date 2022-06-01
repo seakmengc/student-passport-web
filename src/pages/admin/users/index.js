@@ -32,6 +32,8 @@ import AddIcon from '@mui/icons-material/Add';
 import router from 'next/router';
 import { CustomTextField } from 'src/@core/components/forms/custom-text-field';
 import { CustomSearchField } from 'src/@core/components/forms/custom-search-field';
+import { CrudTable } from 'src/components/crud/table';
+import { OfficePerm } from 'src/perms/office';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -53,32 +55,41 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+const cols = [
+  { field: 'firstName', display: 'Name' },
+  { field: 'role', display: 'Role' },
+];
+
 export default function UserList() {
-  const [rows, setRows] = useState([]);
-  const [pagination, setPagination] = useState({
-    currentPage: 1,
-    totalPages: 1,
-  });
-
-  const [search, setSearch] = useState('');
-
-  useEffect(() => {
-    onPageChange(null, 1);
-  }, [search]);
-
-  const onPageChange = async (_, page = 1) => {
-    const { data, error } = await useGetApi('user', {
-      page: page,
-      filter: search === '' ? '' : 'firstName=' + search,
-    });
-
-    setRows(data.data);
-    setPagination(data.pagination);
-  };
-
   return (
     <>
-      <div className='mb-3 flex flex-row justify-end'>
+      <CrudTable
+        indexEndpoint='user'
+        getSearchQuery={(search) => 'firstName=' + search}
+        cols={cols}
+        shouldDisplay={(_, action) => {
+          if (action === 'show') {
+            return true;
+          }
+
+          return OfficePerm.isSuperAdmin();
+        }}
+        onCreateClick={() => {
+          router.push(router.asPath + '/register');
+        }}
+        onEditClick={(user) => {
+          router.push(router.asPath + '/' + user._id);
+        }}
+        onShowClick={(user) => {
+          router.push(router.asPath + '/' + user._id + '/detail');
+        }}
+        onDeleteClick={async (user) => {
+          const { data, error } = await useDeleteApi('user/' + user._id);
+        }}
+        getNameIdentifier={(user) => user.email}
+        searchLabel='Search by First Name'
+      ></CrudTable>
+      {/* <div className='mb-3 flex flex-row justify-end'>
         <Button
           size='medium'
           variant='contained'
@@ -166,7 +177,7 @@ export default function UserList() {
             showLastButton
           />
         )}
-      </div>
+      </div> */}
     </>
   );
 }

@@ -109,7 +109,7 @@ const QuestEdit = ({ quest, inCreateMode }) => {
         <CustomSingleChip
           label='Type'
           idData={questTypes}
-          defaultSelected='mcq'
+          defaultSelected={quest?.questType ?? 'mcq'}
           {...registerSelectField(form, 'questType', (val) => {
             setQuestType(val);
           })}

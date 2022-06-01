@@ -1,5 +1,8 @@
 import { recoilPersist } from 'recoil-persist';
 import { getCookie, setCookies } from 'cookies-next';
+import Cookies from 'cookies';
+import { isInServerSide } from 'src/utils/ssr';
+import { getRecoil } from 'recoil-nexus';
 
 export function useEffectPersisAtom(key) {
   const { persistAtom } = recoilPersist({
@@ -19,4 +22,19 @@ export function useEffectPersisAtom(key) {
   });
 
   return persistAtom;
+}
+
+export function getAtom(atom, ctx) {
+  if (isInServerSide()) {
+    if (!ctx) {
+      return {};
+    }
+
+    const cookies = new Cookies(ctx.req, ctx.res);
+    const persist = JSON.parse(decodeURIComponent(cookies.get('persist')));
+
+    return persist[atom.key];
+  }
+
+  return getRecoil(atom);
 }

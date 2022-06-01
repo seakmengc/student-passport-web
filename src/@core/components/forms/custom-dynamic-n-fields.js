@@ -17,7 +17,7 @@ export const CustomDynamicNFields = ({
   defaultItems = null,
 }) => {
   const [items, setItems] = useState(
-    defaultItems
+    defaultItems && defaultItems.length > 0
       ? Object.fromEntries(defaultItems.map((e, ind) => [ind, e]))
       : {
           0: { ...defItem },

@@ -160,7 +160,7 @@ const UserDropdown = () => {
         <MenuItem
           sx={{ p: 0 }}
           onClick={() => {
-            router.push('/admin/account-settings');
+            router.push('/account-settings');
           }}
         >
           <Box sx={styles}>

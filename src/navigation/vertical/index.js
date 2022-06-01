@@ -21,7 +21,7 @@ const navigation = () => {
     {
       title: 'Dashboard',
       icon: HomeOutline,
-      path: '/',
+      path: '/admin',
     },
     {
       title: 'Account Settings',

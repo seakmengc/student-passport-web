@@ -5,6 +5,7 @@ import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import { useRouter } from 'next/router';
 import { CrudTableNoPagination } from 'src/components/crud/table-no-pagination';
 import { useDeleteApi } from 'src/utils/api';
+import { OfficePerm } from 'src/perms/office';
 
 const cols = [{ field: 'name', display: 'Name' }];
 
@@ -29,6 +30,13 @@ export default function OfficeList() {
               </IconButton>
             </Tooltip>
           );
+        }}
+        shouldDisplay={(office, action) => {
+          if (action === 'show') {
+            return true;
+          }
+
+          return OfficePerm.isAdminOf(office?._id);
         }}
         onCreateClick={() => {
           router.push(router.asPath + '/create');

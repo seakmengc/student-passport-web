@@ -58,6 +58,7 @@ export const CrudTable = ({
   onShowClick,
   onDeleteClick,
   getNameIdentifier,
+  shouldDisplay,
   getCustomActions = null,
   formatData = null,
   searchLabel = 'Search',
@@ -116,17 +117,17 @@ export const CrudTable = ({
         </div>
       )}
 
-      <div className='mb-3 flex flex-row justify-end'>
-        <Button
-          variant='contained'
-          startIcon={<AddIcon />}
-          onClick={() => {
-            onCreateClick();
-          }}
-        >
-          Create
-        </Button>
-      </div>
+      {onCreateClick && shouldDisplay(null, 'create') && (
+        <div className='mb-3 flex flex-row justify-end'>
+          <Button
+            variant='contained'
+            startIcon={<AddIcon />}
+            onClick={onCreateClick}
+          >
+            Create
+          </Button>
+        </div>
+      )}
 
       <div className='my-6 flex flex-col'>
         <CustomSearchField
@@ -170,13 +171,25 @@ export const CrudTable = ({
                     {getCustomActions && getCustomActions(row)}
                     <CrudActions
                       nameIdentifier={getNameIdentifier(row)}
-                      onShowClick={() => onShowClick(row)}
-                      onEditClick={() => onEditClick(row)}
-                      onDeleteClick={async () => {
-                        await onDeleteClick(row);
+                      onShowClick={
+                        onShowClick && shouldDisplay(null, 'show')
+                          ? () => onShowClick(row)
+                          : null
+                      }
+                      onEditClick={
+                        onEditClick && shouldDisplay(null, 'edit')
+                          ? () => onEditClick(row)
+                          : null
+                      }
+                      onDeleteClick={
+                        onDeleteClick && shouldDisplay(null, 'delete')
+                          ? async () => {
+                              await onDeleteClick(row);
 
-                        setReload(true);
-                      }}
+                              setReload(true);
+                            }
+                          : null
+                      }
                     ></CrudActions>
                   </StyledTableCell>
                 </StyledTableRow>

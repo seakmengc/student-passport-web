@@ -57,6 +57,7 @@ export const CrudTableNoPagination = ({
   onEditClick,
   onShowClick,
   onDeleteClick,
+  shouldDisplay,
   getNameIdentifier,
   getCustomActions = null,
   formatData = null,
@@ -108,17 +109,17 @@ export const CrudTableNoPagination = ({
         </div>
       )}
 
-      <div className='mb-3 flex flex-row justify-end'>
-        <Button
-          variant='contained'
-          startIcon={<AddIcon />}
-          onClick={() => {
-            onCreateClick();
-          }}
-        >
-          Create
-        </Button>
-      </div>
+      {onCreateClick && shouldDisplay(null, 'create') && (
+        <div className='mb-3 flex flex-row justify-end'>
+          <Button
+            variant='contained'
+            startIcon={<AddIcon />}
+            onClick={onCreateClick}
+          >
+            Create
+          </Button>
+        </div>
+      )}
 
       <div className='my-6 flex flex-col'>
         <CustomSearchField
@@ -162,10 +163,18 @@ export const CrudTableNoPagination = ({
                     {getCustomActions && getCustomActions(row)}
                     <CrudActions
                       nameIdentifier={getNameIdentifier(row)}
-                      onShowClick={onShowClick ? () => onShowClick(row) : null}
-                      onEditClick={onEditClick ? () => onEditClick(row) : null}
+                      onShowClick={
+                        onShowClick && shouldDisplay(row, 'show')
+                          ? () => onShowClick(row)
+                          : null
+                      }
+                      onEditClick={
+                        onEditClick && shouldDisplay(row, 'edit')
+                          ? () => onEditClick(row)
+                          : null
+                      }
                       onDeleteClick={
-                        onDeleteClick
+                        onDeleteClick && shouldDisplay(row, 'delete')
                           ? async () => {
                               await onDeleteClick(row);
 

@@ -4,6 +4,7 @@ import { CrudTableNoPagination } from 'src/components/crud/table-no-pagination';
 import { useDeleteApi, useGetApi } from 'src/utils/api';
 import { Chip, Typography } from '@mui/material';
 import { ssrGetToken } from 'src/utils/ssr';
+import { OfficePerm } from 'src/perms/office';
 
 const cols = [
   { field: 'quest', display: 'Quest' },
@@ -33,6 +34,14 @@ export default function QuestList({ office }) {
       <CrudTableNoPagination
         indexEndpoint={`quest/office/${officeId}`}
         cols={cols}
+        getNameIdentifier={(quest) => quest.quest}
+        shouldDisplay={(quest, action) => {
+          if (action === 'show') {
+            return false;
+          }
+
+          return OfficePerm.isAdminOf(quest?.office);
+        }}
         onCreateClick={() => {
           router.push(router.asPath + '/create');
         }}
@@ -45,7 +54,6 @@ export default function QuestList({ office }) {
         onDeleteClick={async (quest) => {
           const { data, error } = await useDeleteApi('quest/' + quest._id);
         }}
-        getNameIdentifier={(quest) => quest.name}
       ></CrudTableNoPagination>
     </>
   );
