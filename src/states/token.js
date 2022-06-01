@@ -3,7 +3,7 @@ import { resetRecoil, setRecoil, getRecoil } from 'recoil-nexus';
 import { fetcher } from 'src/utils/api';
 import { useEffectPersisAtom } from 'src/utils/atom-effect';
 import { parseJwt } from 'src/utils/jwt';
-import { throwRedirectError } from 'src/utils/ssr';
+import { ssrGetToken, throwRedirectError } from 'src/utils/ssr';
 import Cookies from 'cookies';
 import { authState, setAuth } from './auth';
 import { isInServerSide } from 'src/utils/ssr';

@@ -31,19 +31,6 @@ function getStyles(name, personName, theme) {
   };
 }
 
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
-];
-
 export const CustomChip = ({
   idData,
   register,
@@ -56,13 +43,11 @@ export const CustomChip = ({
   const hasError = error !== '';
   const [selected, setSelected] = useState(defaultSelected);
 
-  console.log({ idData });
-
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
-    console.log('value', value);
+
     register.onChange(value);
     setSelected(value);
   };

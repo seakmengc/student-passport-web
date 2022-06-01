@@ -17,25 +17,25 @@ import {
 import { ssrGetToken } from 'src/utils/ssr';
 import { getProfileUrl } from 'src/utils/user';
 import * as yup from 'yup';
+import { shouldIgnoreId } from 'src/utils/model';
 
 const schema = yup
   .object({
     name: yup.string().required(),
     admins: yup.array().required(),
-    description: yup.string().required(),
+    description: yup.string(),
   })
   .required();
 
-const OfficeDetail = ({ office, admins }) => {
+const OfficeDetail = ({ office, admins, inCreateMode }) => {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const [saveContent, setSaveContent] = useState({});
-  const inCreateMode = router.query.id === 'create';
 
   const form = useReactHookForm(schema, {
-    name: office.name,
-    admins: office.admins?.map((admin) => admin._id) ?? [],
-    description: office.description,
+    name: office?.name,
+    admins: office?.admins?.map((admin) => admin._id) ?? [],
+    description: office?.description ?? '',
   });
 
   const onSubmit = async (input) => {
@@ -58,7 +58,7 @@ const OfficeDetail = ({ office, admins }) => {
   return (
     <div>
       <div className='ml-4 mb-4 flex flex-row justify-between'>
-        <Typography variant='h4'>{office.name}</Typography>
+        <Typography variant='h4'>{office?.name}</Typography>
         <Button variant='contained' onClick={form.handleSubmit(onSubmit)}>
           Save
         </Button>
@@ -83,7 +83,7 @@ const OfficeDetail = ({ office, admins }) => {
               />
             );
           }}
-          defaultSelected={office.admins?.map((admin) => admin._id)}
+          defaultSelected={office?.admins?.map((admin) => admin._id)}
           {...registerSelectField(form, 'admins')}
         ></CustomChip>
 
@@ -109,14 +109,17 @@ const OfficeDetail = ({ office, admins }) => {
 
 export const getServerSideProps = AdminRoute(async (ctx) => {
   const { accessToken } = await ssrGetToken(ctx);
+  const admins = await useGetApi('user/admin', {}, accessToken);
+
+  if (shouldIgnoreId(ctx.params.id)) {
+    return { props: { inCreateMode: true, admins: admins.data } };
+  }
 
   const { data, error } = await useGetApi(
     'office/' + ctx.params.id,
     {},
     accessToken
   );
-
-  const admins = await useGetApi('user/admin', {}, accessToken);
 
   return {
     props: { office: data, admins: admins.data },

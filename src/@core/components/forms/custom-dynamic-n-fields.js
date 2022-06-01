@@ -10,12 +10,21 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 const defItem = { answer: '', correct: false };
 
-export const CustomDynamicNFields = ({ form, field, label, error = '' }) => {
-  const [items, setItems] = useState({
-    0: { ...defItem },
-    1: { ...defItem },
-  });
-  const [correct, setCorrect] = useState();
+export const CustomDynamicNFields = ({
+  form,
+  field,
+  label,
+  defaultItems = null,
+}) => {
+  const [items, setItems] = useState(
+    defaultItems
+      ? Object.fromEntries(defaultItems.map((e, ind) => [ind, e]))
+      : {
+          0: { ...defItem },
+          1: { ...defItem },
+        }
+  );
+  const error = form.formState.errors[field]?.message ?? '';
   const hasError = error !== '';
 
   const updateItem = (val, key) => {
@@ -54,7 +63,6 @@ export const CustomDynamicNFields = ({ form, field, label, error = '' }) => {
       newItems[key].correct = correctKey == key;
     }
 
-    setCorrect(correctKey);
     setItems(newItems);
 
     form.setValue(field, Object.values(newItems));
@@ -97,6 +105,7 @@ export const CustomDynamicNFields = ({ form, field, label, error = '' }) => {
                       !hasError ? 'border-0' : 'border-2 border-error-500'
                     } my-1 w-full rounded p-3 text-sm text-black shadow ring-primary transition-all duration-150 ease-linear focus:outline-none focus:ring`}
                     placeholder='Input'
+                    defaultValue={items[key].answer}
                     onChange={(event) => {
                       const {
                         target: { value },

@@ -1,26 +1,23 @@
-import { Avatar, Button, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 import { CustomCheckbox } from 'src/@core/components/forms/custom-checkbox';
-import { CustomChip } from 'src/@core/components/forms/custom-chip';
 import { CustomDynamicNFields } from 'src/@core/components/forms/custom-dynamic-n-fields';
-import { CustomEditorJs } from 'src/@core/components/forms/custom-editorjs';
 import { CustomSingleChip } from 'src/@core/components/forms/custom-single-chip';
 import { CustomTextField } from 'src/@core/components/forms/custom-text-field';
 import { FormWrapper } from 'src/@core/components/forms/wrapper';
 import { AdminRoute } from 'src/middleware/admin-route';
 import { useGetApi, usePatchApi, usePostApi } from 'src/utils/api';
 import {
-  registerEditorJsField,
   registerField,
   registerSelectField,
   useReactHookForm,
 } from 'src/utils/form';
 import { shouldIgnoreId } from 'src/utils/model';
 import { ssrGetToken } from 'src/utils/ssr';
-import { getProfileUrl } from 'src/utils/user';
 import * as yup from 'yup';
+import { setFormErrorFromApi } from 'src/utils/form';
 
 const questTypes = [
   { id: 'input', data: 'Input' },
@@ -35,24 +32,24 @@ const answerSchema = yup.object({
 
 const schema = yup
   .object({
-    // office: yup.string().required(),
-    // quest: yup.string().required(),
-    // questType: yup
-    //   .string()
-    //   .oneOf(questTypes.map((each) => each.id))
-    //   .required(),
-    // possibleAnswers: yup
-    //   .array()
-    //   .min(1)
-    //   .of(answerSchema)
-    //   .when('questType', (questType, schema) => {
-    //     if (questType !== 'mcq') {
-    //       return schema;
-    //     }
-    //     return schema.required();
-    //   }),
-    // // order: yup.number().positive().required(),
-    // autoGrading: yup.boolean().required(),
+    office: yup.string().required(),
+    quest: yup.string().required(),
+    questType: yup
+      .string()
+      .oneOf(questTypes.map((each) => each.id))
+      .required(),
+    possibleAnswers: yup
+      .array()
+      .min(2)
+      .of(answerSchema)
+      .when('questType', (questType, schema) => {
+        if (questType !== 'mcq') {
+          return schema;
+        }
+        return schema.required();
+      }),
+    // order: yup.number().positive().required(),
+    autoGrading: yup.boolean().required(),
   })
   .required();
 
@@ -71,18 +68,17 @@ const QuestEdit = ({ quest, inCreateMode }) => {
   });
 
   const onSubmit = async (input) => {
-    input['quest'] = await saveContent.callback();
+    // input['quest'] = await saveContent.callback();
     input['possibleAnswers'] = input['possibleAnswers']?.filter(
       (each) => each.answer !== ''
     );
-    console.log(input['possibleAnswers']);
 
     const { data, error } = await (inCreateMode
       ? usePostApi('quest', input)
       : usePatchApi('quest/' + quest._id, input));
 
     if (error) {
-      enqueueSnackbar(data.message, { variant: 'error' });
+      setFormErrorFromApi(form, data);
       return;
     }
 
@@ -95,18 +91,20 @@ const QuestEdit = ({ quest, inCreateMode }) => {
     <div>
       <div className='ml-4 mb-4 flex flex-row justify-between'>
         <Typography variant='h4'>{quest?.name}</Typography>
-        <Button variant='contained' onClick={form.handleSubmit(onSubmit)}>
-          Save
-        </Button>
       </div>
 
       <FormWrapper form={form} onSubmit={onSubmit}>
-        <CustomEditorJs
+        {/* <CustomEditorJs
           label='Quest'
           setSaveContent={setSaveContent}
           minHeight={100}
           {...registerEditorJsField(form, 'quest')}
-        ></CustomEditorJs>
+        ></CustomEditorJs> */}
+
+        <CustomTextField
+          label='Quest'
+          {...registerField(form, 'quest')}
+        ></CustomTextField>
 
         <CustomSingleChip
           label='Type'
@@ -121,6 +119,7 @@ const QuestEdit = ({ quest, inCreateMode }) => {
           <CustomDynamicNFields
             label='Possible Answers'
             form={form}
+            defaultItems={quest?.possibleAnswers}
             field='possibleAnswers'
           ></CustomDynamicNFields>
         )}

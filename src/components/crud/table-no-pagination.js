@@ -46,6 +46,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
  *      field,
  *      display,
  *      format, (props...)
+ *      getCell, (rtn component)
  *  }
  * ]
  */
@@ -153,7 +154,7 @@ export const CrudTableNoPagination = ({
                   {cols.map((col) => {
                     return (
                       <StyledTableCell align='left' {...col.format}>
-                        {row[col.field]}
+                        {col.getCell ? col.getCell(row) : row[col.field]}
                       </StyledTableCell>
                     );
                   })}
@@ -161,13 +162,19 @@ export const CrudTableNoPagination = ({
                     {getCustomActions && getCustomActions(row)}
                     <CrudActions
                       nameIdentifier={getNameIdentifier(row)}
-                      onShowClick={() => onShowClick(row)}
-                      onEditClick={() => onEditClick(row)}
-                      onDeleteClick={async () => {
-                        await onDeleteClick(row);
+                      onShowClick={onShowClick ? () => onShowClick(row) : null}
+                      onEditClick={onEditClick ? () => onEditClick(row) : null}
+                      onDeleteClick={
+                        onDeleteClick
+                          ? async () => {
+                              await onDeleteClick(row);
 
-                        setRows(rows.filter((each) => each._id !== row._id));
-                      }}
+                              setRows(
+                                rows.filter((each) => each._id !== row._id)
+                              );
+                            }
+                          : null
+                      }
                     ></CrudActions>
                   </StyledTableCell>
                 </StyledTableRow>
