@@ -1,10 +1,7 @@
 import { Button, Grow, IconButton, Tooltip } from '@mui/material';
 import { useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
-import { CustomTextField } from './custom-text-field';
 import ClearIcon from '@mui/icons-material/Clear';
-import { registerField } from 'src/utils/form';
-import { isEmpty } from 'src/utils/func';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 

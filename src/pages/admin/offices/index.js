@@ -1,13 +1,25 @@
 // import 'react-datepicker/dist/react-datepicker.css';
 import { AdminRoute } from 'src/middleware/admin-route';
-import { IconButton, Tooltip } from '@mui/material';
+import { Checkbox, IconButton, Tooltip } from '@mui/material';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import { useRouter } from 'next/router';
 import { CrudTableNoPagination } from 'src/components/crud/table-no-pagination';
 import { useDeleteApi } from 'src/utils/api';
 import { OfficePerm } from 'src/perms/office';
 
-const cols = [{ field: 'name', display: 'Name' }];
+const cols = [
+  { field: 'name', display: 'Name' },
+  {
+    field: 'hasUnits',
+    display: 'Has Units',
+    getCell: (row) => (
+      <Checkbox
+        color={row.hasUnits ? 'success' : 'info'}
+        checked={row.hasUnits}
+      ></Checkbox>
+    ),
+  },
+];
 
 export default function OfficeList() {
   const router = useRouter();
@@ -19,6 +31,10 @@ export default function OfficeList() {
         getSearchQuery={(search) => 'name=' + search}
         cols={cols}
         getCustomActions={(row) => {
+          if (row?.hasUnits) {
+            return <></>;
+          }
+
           return (
             <Tooltip title='Quests'>
               <IconButton

@@ -136,9 +136,9 @@ export const CrudTableNoPagination = ({
             <TableHead>
               <TableRow>
                 <StyledTableCell>No</StyledTableCell>
-                {cols.map((col) => {
+                {cols.map((col, ind) => {
                   return (
-                    <StyledTableCell align='left'>
+                    <StyledTableCell align='left' key={ind}>
                       {col.display}
                     </StyledTableCell>
                   );

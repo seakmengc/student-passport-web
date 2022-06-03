@@ -54,11 +54,11 @@ const navigation = () => {
       icon: LocalLibraryIcon,
       path: '/admin/units',
     },
-    {
-      title: 'Quests',
-      icon: QuestionAnswerIcon,
-      path: '/admin/quests',
-    },
+    // {
+    //   title: 'Quests',
+    //   icon: QuestionAnswerIcon,
+    //   path: '/admin/quests',
+    // },
     {
       title: 'Approval',
       icon: LibraryAddCheckIcon,

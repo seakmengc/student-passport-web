@@ -19,6 +19,7 @@ import { useRouter } from 'next/router';
 import { CustomSearchField } from 'src/@core/components/forms/custom-search-field';
 import { CrudActions } from 'src/@core/components/tables/crud-actions';
 import { AlertCommon } from 'src/@core/components/alerts/common';
+import { getArrByField } from 'src/utils/arr';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -120,6 +121,7 @@ export const CrudTable = ({
       {onCreateClick && shouldDisplay(null, 'create') && (
         <div className='mb-3 flex flex-row justify-end'>
           <Button
+            size='small'
             variant='contained'
             startIcon={<AddIcon />}
             onClick={onCreateClick}
@@ -163,7 +165,7 @@ export const CrudTable = ({
                   {cols.map((col) => {
                     return (
                       <StyledTableCell align='left' {...col.format}>
-                        {row[col.field]}
+                        {getArrByField(row, col.field)}
                       </StyledTableCell>
                     );
                   })}

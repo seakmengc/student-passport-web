@@ -18,6 +18,7 @@ import { ssrGetToken } from 'src/utils/ssr';
 import { getProfileUrl } from 'src/utils/user';
 import * as yup from 'yup';
 import { shouldIgnoreId } from 'src/utils/model';
+import { CustomCheckbox } from 'src/@core/components/forms/custom-checkbox';
 
 const schema = yup
   .object({
@@ -69,6 +70,11 @@ const OfficeDetail = ({ office, admins, inCreateMode }) => {
           label='Name'
           {...registerField(form, 'name')}
         ></CustomTextField>
+
+        <CustomCheckbox
+          label='Has Units'
+          {...registerField(form, 'hasUnits')}
+        ></CustomCheckbox>
 
         <CustomChip
           label='Admins'

@@ -5,5 +5,13 @@ export const getProfileUrl = (user) => {
     return `https://avatars.dicebear.com/api/avataaars/${user._id}.svg`;
   }
 
-  return `${apiBaseUrl}upload/${user.profile}/file`;
+  return getUploadUrl(user.profile);
+};
+
+export const getUploadUrl = (uploadId) => {
+  if (!uploadId) {
+    return null;
+  }
+
+  return `${apiBaseUrl}upload/${uploadId}/file`;
 };

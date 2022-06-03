@@ -7,7 +7,7 @@ export const CustomTextField = ({
   const hasError = error !== '';
 
   return (
-    <div className='relative mb-3 w-full'>
+    <div className='relative mb-4 w-full'>
       <label
         className={`block uppercase ${
           hasError ? 'text-error-500' : 'text-primary-600'

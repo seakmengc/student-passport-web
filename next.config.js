@@ -3,6 +3,7 @@ const path = require('path');
 module.exports = {
   trailingSlash: false,
   reactStrictMode: false,
+  images: { domains: ['localhost'] },
   experimental: {
     esmExternals: false,
     jsconfigPaths: true, // enables it for both jsconfig.json and tsconfig.json
