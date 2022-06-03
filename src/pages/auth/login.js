@@ -68,7 +68,6 @@ const schema = yup
   .required();
 
 const LoginPage = () => {
-  // ** State
   const form = useReactHookForm(schema);
 
   const onSubmit = async (input) => {
@@ -76,6 +75,7 @@ const LoginPage = () => {
 
     const { data, error } = await useUnauthPostApi('auth/login', input);
     if (error) {
+      console.log({ data });
       setFormErrorFromApi(form, data);
 
       return;
@@ -180,7 +180,7 @@ const LoginPage = () => {
           Please sign-in to your account and start the adventure
         </Typography>
       </Box>
-      <FormWrapper form={form} onSubmit={form.handleSubmit(onSubmit)}>
+      <FormWrapper form={form} onSubmit={onSubmit}>
         <CustomTextField label='Email' {...registerField(form, 'email')} />
         <PasswordField label='Password' {...registerField(form, 'password')} />
         <Box

@@ -36,6 +36,8 @@ export const CustomChip = ({
   register,
   label,
   getAvatar,
+  multiple = true,
+  placeholder = 'Select',
   defaultSelected = [],
   error = '',
 }) => {
@@ -61,24 +63,32 @@ export const CustomChip = ({
       >
         {label}
       </label>
-      {/* <input
-      type={type}
-      className={`${
-        !hasError ? 'border-0' : 'border-2 border-error-500'
-      } text-primary-600 placeholder-primary-300 w-full rounded bg-white px-3 py-3 text-sm shadow ring-primary transition-all duration-150 ease-linear  focus:outline-none focus:ring`}
-      placeholder={label}
-      {...register}
-    /> */}
       <Select
         className='w-full border-none bg-white shadow-sm ring-0'
-        multiple
+        multiple={multiple}
         displayEmpty
         value={selected}
         onChange={handleChange}
         input={<OutlinedInput notched={true} />}
         renderValue={(selected) => {
-          if (selected.length === 0) {
-            return <em>Select Admins</em>;
+          if (!selected || selected.length === 0) {
+            return <em>{placeholder}</em>;
+          }
+
+          if (!multiple) {
+            return (
+              <Chip
+                key={selected}
+                avatar={getAvatar ? getAvatar(selected) : null}
+                label={idData.find((each) => each.id === selected).data}
+                variant='filled'
+                className='text-black'
+                color='secondary'
+                onDelete={() => {
+                  console.log('On Delete');
+                }}
+              />
+            );
           }
 
           return (

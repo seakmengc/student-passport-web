@@ -37,7 +37,7 @@ export default function ApprovalIndex() {
         );
       }}
       getNameIdentifier={(studentQuest) =>
-        "${studentQuest.user.firstName}'s quest"
+        `${studentQuest.user?.firstName}'s quest`
       }
       searchLabel='Search by First Name'
     ></CrudTable>

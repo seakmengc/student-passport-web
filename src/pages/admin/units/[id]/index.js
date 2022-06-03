@@ -23,13 +23,13 @@ import { CustomCheckbox } from 'src/@core/components/forms/custom-checkbox';
 const schema = yup
   .object({
     name: yup.string().required(),
+    parent: yup.string().required(),
     admins: yup.array().required(),
     description: yup.string(),
-    hasUnits: yup.boolean().required(),
   })
   .required();
 
-const OfficeDetail = ({ office, admins, inCreateMode }) => {
+const OfficeDetail = ({ office, parents, admins, inCreateMode }) => {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const [saveContent, setSaveContent] = useState({});
@@ -38,7 +38,7 @@ const OfficeDetail = ({ office, admins, inCreateMode }) => {
     name: office?.name,
     admins: office?.admins?.map((admin) => admin._id) ?? [],
     description: office?.description ?? '',
-    hasUnits: office?.hasUnits ?? true,
+    parent: office?.parent,
   });
 
   const onSubmit = async (input) => {
@@ -53,9 +53,9 @@ const OfficeDetail = ({ office, admins, inCreateMode }) => {
       return;
     }
 
-    enqueueSnackbar('Office Saved!', { variant: 'success' });
+    enqueueSnackbar('Unit Saved!', { variant: 'success' });
 
-    router.push('/admin/offices');
+    router.back();
   };
 
   return (
@@ -73,14 +73,21 @@ const OfficeDetail = ({ office, admins, inCreateMode }) => {
           {...registerField(form, 'name')}
         ></CustomTextField>
 
-        <CustomCheckbox
-          label='Has Units'
-          defaultValue={office?.hasUnits}
-          {...registerField(form, 'hasUnits')}
-        ></CustomCheckbox>
+        <CustomChip
+          label='Office'
+          placeholder='Select Office'
+          multiple={false}
+          idData={parents.map((parent) => ({
+            id: parent._id,
+            data: parent.name,
+          }))}
+          defaultSelected={office?.parent?._id}
+          {...registerSelectField(form, 'parent')}
+        ></CustomChip>
 
         <CustomChip
           label='Admins'
+          placeholder='Select Admins'
           idData={admins.map((admin) => ({
             id: admin._id,
             data: admin.firstName,
@@ -120,20 +127,24 @@ const OfficeDetail = ({ office, admins, inCreateMode }) => {
 export const getServerSideProps = AdminRoute(async (ctx) => {
   const { accessToken } = await ssrGetToken(ctx);
   const admins = await useGetApi('user/admin', {}, accessToken);
-
-  if (shouldIgnoreId(ctx.params.id)) {
-    return { props: { inCreateMode: true, admins: admins.data } };
-  }
-
-  const { data, error } = await useGetApi(
-    'office/' + ctx.params.id,
-    {},
+  const parents = await useGetApi(
+    'office',
+    { onlyHasUnits: true },
     accessToken
   );
 
-  return {
-    props: { office: data, admins: admins.data },
+  const rtn = {
+    props: { inCreateMode: true, admins: admins.data, parents: parents.data },
   };
+  if (shouldIgnoreId(ctx.params.id)) {
+    return rtn;
+  }
+
+  const office = await useGetApi('office/' + ctx.params.id, {}, accessToken);
+
+  rtn.props.office = office.data;
+
+  return rtn;
 });
 
 export default OfficeDetail;

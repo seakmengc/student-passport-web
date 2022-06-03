@@ -10,13 +10,18 @@ const FormControlLabel = styled(MuiFormControlLabel)(({ theme }) => ({
   },
 }));
 
-export const CustomCheckbox = ({ register, label, error = '' }) => {
+export const CustomCheckbox = ({
+  register,
+  label,
+  defaultValue = true,
+  error = '',
+}) => {
   const hasError = error !== '';
 
   return (
     <div>
       <FormControlLabel
-        control={<Checkbox defaultChecked={true} />}
+        control={<Checkbox defaultChecked={defaultValue} />}
         label={label}
         {...register}
       />

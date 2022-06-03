@@ -2,24 +2,32 @@ import { useState } from 'react';
 import { AlertCommon } from 'src/@core/components/alerts/common';
 
 export const FormWrapper = ({ children, form, onSubmit }) => {
-  const hasError = Object.keys(form.formState.errors).length > 0;
-  const [openErrorAlert, setOpenErrorAlert] = useState(true);
+  const [openErrorAlert, setOpenErrorAlert] = useState(false);
 
   return (
     <form
-      onSubmit={(e) => {
-        setOpenErrorAlert(true);
+      onSubmit={async (e) => {
+        if (openErrorAlert) {
+          setOpenErrorAlert(false);
+        }
 
-        return form.handleSubmit(onSubmit)(e);
+        const rtn = await form.handleSubmit(onSubmit)(e);
+
+        if (form.formState.errors['form']?.message) {
+          setOpenErrorAlert(true);
+        }
+
+        return rtn;
       }}
     >
-      {openErrorAlert && form.formState.errors['form']?.message && (
+      <div>
         <AlertCommon
+          open={openErrorAlert}
           msg={form.formState.errors['form']?.message}
           error={form.formState.errors['form']?.type === 'error'}
           onClose={() => setOpenErrorAlert(false)}
         ></AlertCommon>
-      )}
+      </div>
 
       {children}
     </form>

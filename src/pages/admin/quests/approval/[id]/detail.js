@@ -89,7 +89,6 @@ function BpRadio(props) {
   );
 }
 
-const roles = ['Student', 'Admin'];
 const schema = yup
   .object({
     isApproved: yup.boolean().required(),
@@ -199,7 +198,7 @@ const QuestDetail = ({ studentQuest }) => {
               { id: '1', data: 'Approve' },
               { id: '0', data: 'Reject' },
             ]}
-            defaultSelected={isApproved}
+            defaultSelected={isApproved ? '1' : '0'}
             label='Action'
             {...registerSelectField(form, 'isApproved', (val) => {
               setIsApproved(val === '1');

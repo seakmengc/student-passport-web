@@ -2,13 +2,13 @@ import { Alert, IconButton, Collapse } from '@mui/material';
 import { useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 
-export const AlertCommon = ({ msg, onClose, error = false }) => {
-  if (msg === '') {
-    return <></>;
-  }
+export const AlertCommon = ({ msg, open, onClose, error = false }) => {
+  // if (msg === '') {
+  //   return <></>;
+  // }
 
   return (
-    <Collapse>
+    <Collapse in={open}>
       <Alert
         variant='filled'
         severity={error ? 'error' : 'success'}

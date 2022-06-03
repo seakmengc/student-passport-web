@@ -17,7 +17,7 @@ export const CardCenterLayout = ({ children }) => {
   return (
     <BlankLayout>
       <Box className='content-center'>
-        <Card sx={{ zIndex: 1 }}>
+        <Card sx={{ zIndex: 1 }} className='w-full sm:w-128'>
           <CardContent
             sx={{ padding: (theme) => `${theme.spacing(12, 9, 7)} !important` }}
           >
