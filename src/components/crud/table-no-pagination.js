@@ -112,9 +112,11 @@ export const CrudTableNoPagination = ({
       {onCreateClick && shouldDisplay(null, 'create') && (
         <div className='mb-3 flex flex-row justify-end'>
           <Button
+            size='small'
             variant='contained'
             startIcon={<AddIcon />}
             onClick={onCreateClick}
+            className='w-28'
           >
             Create
           </Button>

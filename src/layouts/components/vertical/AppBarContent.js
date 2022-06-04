@@ -13,10 +13,13 @@ import Magnify from 'mdi-material-ui/Magnify';
 import ModeToggler from 'src/@core/layouts/components/shared-components/ModeToggler';
 import UserDropdown from 'src/@core/layouts/components/shared-components/UserDropdown';
 import NotificationDropdown from 'src/@core/layouts/components/shared-components/NotificationDropdown';
+import { Typography } from '@mui/material';
+import { useRouter } from 'next/router';
 
 const AppBarContent = (props) => {
   // ** Props
   const { hidden, settings, saveSettings, toggleNavVisibility } = props;
+  const router = useRouter();
 
   // ** Hook
   const hiddenSm = useMediaQuery((theme) => theme.breakpoints.down('sm'));
@@ -43,7 +46,8 @@ const AppBarContent = (props) => {
             <Menu />
           </IconButton>
         ) : null}
-        <TextField
+        <Typography>{router.route}</Typography>
+        {/* <TextField
           size='small'
           sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
           InputProps={{
@@ -53,7 +57,7 @@ const AppBarContent = (props) => {
               </InputAdornment>
             ),
           }}
-        />
+        /> */}
       </Box>
       <Box
         className='actions-right'

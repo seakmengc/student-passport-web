@@ -1,38 +1,38 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState } from 'react';
 
 // ** MUI Imports
-import Fab from '@mui/material/Fab'
-import { styled } from '@mui/material/styles'
-import Box from '@mui/material/Box'
+import Fab from '@mui/material/Fab';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 
 // ** Icons Imports
-import ArrowUp from 'mdi-material-ui/ArrowUp'
+import ArrowUp from 'mdi-material-ui/ArrowUp';
 
 // ** Theme Config Import
-import themeConfig from 'src/configs/themeConfig'
+import themeConfig from 'src/configs/themeConfig';
 
 // ** Components
-import AppBar from './components/vertical/appBar'
-import Navigation from './components/vertical/navigation'
-import Footer from './components/shared-components/footer'
-import ScrollToTop from 'src/@core/components/scroll-to-top'
+import AppBar from './components/vertical/appBar';
+import Navigation from './components/vertical/navigation';
+import Footer from './components/shared-components/footer';
+import ScrollToTop from 'src/@core/components/scroll-to-top';
 
 // ** Styled Component
-import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
+import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker';
 
 const VerticalLayoutWrapper = styled('div')({
   height: '100%',
-  display: 'flex'
-})
+  display: 'flex',
+});
 
 const MainContentWrapper = styled(Box)({
   flexGrow: 1,
   minWidth: 0,
   display: 'flex',
   minHeight: '100vh',
-  flexDirection: 'column'
-})
+  flexDirection: 'column',
+});
 
 const ContentWrapper = styled('main')(({ theme }) => ({
   flexGrow: 1,
@@ -41,23 +41,23 @@ const ContentWrapper = styled('main')(({ theme }) => ({
   transition: 'padding .25s ease-in-out',
   [theme.breakpoints.down('sm')]: {
     paddingLeft: theme.spacing(4),
-    paddingRight: theme.spacing(4)
-  }
-}))
+    paddingRight: theme.spacing(4),
+  },
+}));
 
-const VerticalLayout = props => {
+const VerticalLayout = (props) => {
   // ** Props
-  const { settings, children, scrollToTop } = props
+  const { settings, children, scrollToTop } = props;
 
   // ** Vars
-  const { contentWidth } = settings
-  const navWidth = themeConfig.navigationSize
+  const { contentWidth } = settings;
+  const navWidth = themeConfig.navigationSize;
 
   // ** States
-  const [navVisible, setNavVisible] = useState(false)
+  const [navVisible, setNavVisible] = useState(false);
 
   // ** Toggle Functions
-  const toggleNavVisibility = () => setNavVisible(!navVisible)
+  const toggleNavVisibility = () => setNavVisible(!navVisible);
 
   return (
     <>
@@ -78,8 +78,8 @@ const VerticalLayout = props => {
               ...(contentWidth === 'boxed' && {
                 mx: 'auto',
                 '@media (min-width:1440px)': { maxWidth: 1440 },
-                '@media (min-width:1200px)': { maxWidth: '100%' }
-              })
+                '@media (min-width:1200px)': { maxWidth: '100%' },
+              }),
             }}
           >
             {children}
@@ -103,7 +103,7 @@ const VerticalLayout = props => {
         </ScrollToTop>
       )}
     </>
-  )
-}
+  );
+};
 
-export default VerticalLayout
+export default VerticalLayout;

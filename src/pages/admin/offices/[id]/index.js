@@ -1,4 +1,4 @@
-import { Avatar, Button, Typography } from '@mui/material';
+import { Avatar, Box, Button, Tooltip, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
@@ -7,23 +7,33 @@ import { CustomEditorJs } from 'src/@core/components/forms/custom-editorjs';
 import { CustomTextField } from 'src/@core/components/forms/custom-text-field';
 import { FormWrapper } from 'src/@core/components/forms/wrapper';
 import { AdminRoute } from 'src/middleware/admin-route';
-import { useGetApi, usePatchApi, usePostApi } from 'src/utils/api';
+import {
+  useGetApi,
+  usePatchApi,
+  usePostApi,
+  usePostUploadApi,
+} from 'src/utils/api';
 import {
   registerEditorJsField,
   registerField,
   registerSelectField,
+  setFormErrorFromApi,
   useReactHookForm,
 } from 'src/utils/form';
 import { ssrGetToken } from 'src/utils/ssr';
-import { getProfileUrl } from 'src/utils/user';
+import { getProfileUrl, getUploadUrl } from 'src/utils/user';
 import * as yup from 'yup';
-import { shouldIgnoreId } from 'src/utils/model';
+import { getIdFromModel, shouldIgnoreId } from 'src/utils/model';
 import { CustomCheckbox } from 'src/@core/components/forms/custom-checkbox';
+import styled from '@emotion/styled';
+import { showSnackbar } from 'src/utils/snackbar';
+import CustomImage from 'src/@core/components/forms/custom-image';
 
 const schema = yup
   .object({
     name: yup.string().required(),
     admins: yup.array().required(),
+    stamp: yup.string().required(),
     description: yup.string(),
     hasUnits: yup.boolean().required(),
   })
@@ -39,6 +49,7 @@ const OfficeDetail = ({ office, admins, inCreateMode }) => {
     admins: office?.admins?.map((admin) => admin._id) ?? [],
     description: office?.description ?? '',
     hasUnits: office?.hasUnits ?? true,
+    stamp: office?.stamp ?? '',
   });
 
   const onSubmit = async (input) => {
@@ -50,12 +61,13 @@ const OfficeDetail = ({ office, admins, inCreateMode }) => {
 
     if (error) {
       enqueueSnackbar(data.message, { variant: 'error' });
+      setFormErrorFromApi(form, data);
       return;
     }
 
     enqueueSnackbar('Office Saved!', { variant: 'success' });
 
-    router.push('/admin/offices');
+    router.back();
   };
 
   return (
@@ -73,12 +85,6 @@ const OfficeDetail = ({ office, admins, inCreateMode }) => {
           {...registerField(form, 'name')}
         ></CustomTextField>
 
-        <CustomCheckbox
-          label='Has Units'
-          defaultValue={office?.hasUnits}
-          {...registerField(form, 'hasUnits')}
-        ></CustomCheckbox>
-
         <CustomChip
           label='Admins'
           idData={admins.map((admin) => ({
@@ -95,6 +101,28 @@ const OfficeDetail = ({ office, admins, inCreateMode }) => {
           defaultSelected={office?.admins?.map((admin) => admin._id)}
           {...registerSelectField(form, 'admins')}
         ></CustomChip>
+
+        {inCreateMode && (
+          <div>
+            <CustomCheckbox
+              label='Has Units'
+              defaultValue={office?.hasUnits}
+              {...registerField(form, 'hasUnits')}
+            ></CustomCheckbox>
+            <Typography variant='caption'>
+              * Check to allow for units creation under the office, can't edit
+              later
+            </Typography>
+          </div>
+        )}
+
+        <CustomImage
+          form={form}
+          label='Upload Stamp'
+          enqueueSnackbar={enqueueSnackbar}
+          field='stamp'
+          defaultImageSrc={getUploadUrl(getIdFromModel(office?.stamp))}
+        ></CustomImage>
 
         <CustomEditorJs
           label='Description'

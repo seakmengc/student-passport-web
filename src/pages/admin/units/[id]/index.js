@@ -12,13 +12,15 @@ import {
   registerEditorJsField,
   registerField,
   registerSelectField,
+  setFormErrorFromApi,
   useReactHookForm,
 } from 'src/utils/form';
 import { ssrGetToken } from 'src/utils/ssr';
-import { getProfileUrl } from 'src/utils/user';
+import { getProfileUrl, getUploadUrl } from 'src/utils/user';
 import * as yup from 'yup';
-import { shouldIgnoreId } from 'src/utils/model';
+import { getIdFromModel, shouldIgnoreId } from 'src/utils/model';
 import { CustomCheckbox } from 'src/@core/components/forms/custom-checkbox';
+import CustomImage from 'src/@core/components/forms/custom-image';
 
 const schema = yup
   .object({
@@ -50,6 +52,7 @@ const OfficeDetail = ({ office, parents, admins, inCreateMode }) => {
 
     if (error) {
       enqueueSnackbar(data.message, { variant: 'error' });
+      setFormErrorFromApi(form, data);
       return;
     }
 
@@ -102,6 +105,14 @@ const OfficeDetail = ({ office, parents, admins, inCreateMode }) => {
           defaultSelected={office?.admins?.map((admin) => admin._id)}
           {...registerSelectField(form, 'admins')}
         ></CustomChip>
+
+        <CustomImage
+          form={form}
+          label='Upload Stamp'
+          enqueueSnackbar={enqueueSnackbar}
+          field='stamp'
+          defaultImageSrc={getUploadUrl(getIdFromModel(office?.stamp))}
+        ></CustomImage>
 
         <CustomEditorJs
           label='Description'
