@@ -64,8 +64,6 @@ const UserDropdown = () => {
     router.replace('/auth/login');
   };
 
-  console.log({ authStore });
-
   const styles = {
     py: 2,
     px: 4,

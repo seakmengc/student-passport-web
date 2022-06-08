@@ -29,8 +29,6 @@ export const setNewLogin = async (data) => {
 };
 
 export const refreshIfExpired = async ({ exp, refreshToken, accessToken }) => {
-  console.log(exp, refreshToken, Date.now());
-
   if (exp > Date.now()) {
     return { exp, refreshToken, accessToken };
   }

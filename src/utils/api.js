@@ -98,7 +98,6 @@ export const useDeleteApi = async (path, data, token = null) => {
 export const usePostUploadApi = async (file, token = null) => {
   const formData = new FormData();
   formData.append('file', file);
-  console.log({ file });
 
   return fetcher('upload', {
     method: 'POST',

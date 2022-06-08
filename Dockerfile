@@ -1,12 +1,11 @@
-FROM node:16.13.2-alpine as dependencies
+FROM node:16.13.2-alpine as builder
+
 WORKDIR /app
+
 COPY package*.json ./
 RUN npm install
 
-FROM node:16.13.2-alpine as builder
-WORKDIR /app
 COPY . .
-COPY --from=dependencies /app/node_modules ./node_modules
 RUN npm run build
 
 FROM node:16.13.2-alpine as runner
