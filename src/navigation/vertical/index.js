@@ -15,9 +15,12 @@ import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import DeveloperModeIcon from '@mui/icons-material/DeveloperMode';
+import PolicyIcon from '@mui/icons-material/Policy';
+import { OfficePerm } from 'src/perms/office';
 
 const navigation = () => {
-  return [
+  const rtn = [
     {
       title: 'Dashboard',
       icon: HomeOutline,
@@ -54,66 +57,29 @@ const navigation = () => {
       icon: LocalLibraryIcon,
       path: '/admin/units',
     },
-    // {
-    //   title: 'Quests',
-    //   icon: QuestionAnswerIcon,
-    //   path: '/admin/quests',
-    // },
     {
       title: 'Approval',
       icon: LibraryAddCheckIcon,
       path: '/admin/quests/approval',
     },
-    // {
-    //   sectionTitle: 'Pages',
-    // },
-    // {
-    //   title: 'Login',
-    //   icon: Login,
-    //   path: '/auth/login',
-    //   openInNewTab: true,
-    // },
-    // {
-    //   title: 'Register',
-    //   icon: AccountPlusOutline,
-    //   path: '/auth/register',
-    //   openInNewTab: true,
-    // },
-    // {
-    //   title: 'Error',
-    //   icon: AlertCircleOutline,
-    //   path: '/pages/error',
-    //   openInNewTab: true,
-    // },
-    // {
-    //   sectionTitle: 'User Interface',
-    // },
-    // {
-    //   title: 'Typography',
-    //   icon: FormatLetterCase,
-    //   path: '/typography',
-    // },
-    // {
-    //   title: 'Icons',
-    //   path: '/icons',
-    //   icon: GoogleCirclesExtended,
-    // },
-    // {
-    //   title: 'Cards',
-    //   icon: CreditCardOutline,
-    //   path: '/cards',
-    // },
-    // {
-    //   title: 'Tables',
-    //   icon: Table,
-    //   path: '/tables',
-    // },
-    // {
-    //   icon: CubeOutline,
-    //   title: 'Form Layouts',
-    //   path: '/form-layouts',
-    // },
   ];
+
+  if (OfficePerm.isSuperAdmin()) {
+    rtn.push(
+      ...[
+        {
+          sectionTitle: 'Dev Tool',
+        },
+        {
+          title: 'Telescope',
+          icon: PolicyIcon,
+          path: '/admin/telescope',
+        },
+      ]
+    );
+  }
+
+  return rtn;
 };
 
 export default navigation;

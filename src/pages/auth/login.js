@@ -91,7 +91,7 @@ const LoginPage = () => {
     }
     console.log({ auth });
 
-    router.push(auth.isAdmin ? '/admin' : '/');
+    router.replace(auth.isAdmin ? '/admin' : '/');
   };
 
   // ** Hook

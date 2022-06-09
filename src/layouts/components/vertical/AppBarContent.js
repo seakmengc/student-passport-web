@@ -13,8 +13,9 @@ import Magnify from 'mdi-material-ui/Magnify';
 import ModeToggler from 'src/@core/layouts/components/shared-components/ModeToggler';
 import UserDropdown from 'src/@core/layouts/components/shared-components/UserDropdown';
 import NotificationDropdown from 'src/@core/layouts/components/shared-components/NotificationDropdown';
-import { Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 const AppBarContent = (props) => {
   // ** Props
@@ -46,7 +47,14 @@ const AppBarContent = (props) => {
             <Menu />
           </IconButton>
         ) : null}
-        <Typography>{router.route}</Typography>
+        {/* <Typography>{router.route}</Typography> */}
+        <Typography
+          variant='h7'
+          className='hover:cursor-pointer'
+          onClick={() => router.back()}
+        >
+          <KeyboardArrowLeftIcon /> Back
+        </Typography>
         {/* <TextField
           size='small'
           sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
