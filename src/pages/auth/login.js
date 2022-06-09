@@ -75,13 +75,21 @@ const LoginPage = () => {
 
     const { data, error } = await useUnauthPostApi('auth/login', input);
     if (error) {
-      console.log({ data });
       setFormErrorFromApi(form, data);
 
       return;
     }
 
     const auth = await setNewLogin(data);
+    if (!auth) {
+      setFormErrorFromApi(form, {
+        message: 'Something went wrong!',
+        errors: [],
+      });
+
+      return;
+    }
+    console.log({ auth });
 
     router.push(auth.isAdmin ? '/admin' : '/');
   };

@@ -33,6 +33,8 @@ import '../../styles/globals.css';
 import { RecoilRoot } from 'recoil';
 import RecoilNexus from 'recoil-nexus';
 import { SnackbarProvider } from 'notistack';
+import { useEffect } from 'react';
+import { retrieveMyOffices } from 'src/states/offices';
 
 const clientSideEmotionCache = createEmotionCache();
 

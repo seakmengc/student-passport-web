@@ -3,10 +3,10 @@ import { resetRecoil, setRecoil, getRecoil } from 'recoil-nexus';
 import { fetcher } from 'src/utils/api';
 import { useEffectPersisAtom } from 'src/utils/atom-effect';
 import { parseJwt } from 'src/utils/jwt';
-import { ssrGetToken, throwRedirectError } from 'src/utils/ssr';
-import Cookies from 'cookies';
+import { setAtomCookie, throwRedirectError } from 'src/utils/ssr';
 import { authState, setAuth } from './auth';
 import { isInServerSide } from 'src/utils/ssr';
+import { officesState } from './offices';
 
 export const tokenState = atom({
   key: 'token',
@@ -45,7 +45,11 @@ export const refreshIfExpired = async ({ exp, refreshToken, accessToken }) => {
   });
 
   if (error) {
-    throwRedirectError('/auth/login');
+    if (isInServerSide()) {
+      throwRedirectError('/auth/login');
+    } else {
+      return {};
+    }
   }
 
   const rtn = {
@@ -65,15 +69,13 @@ export const setLogout = (ctx = null) => {
   if (typeof window !== 'undefined') {
     resetRecoil(tokenState);
     resetRecoil(authState);
+    resetRecoil(officesState);
   }
 
   //ssr
 
   if (ctx != null) {
-    const cookies = new Cookies(ctx.req, ctx.res);
-    cookies.set('persist', JSON.stringify({}), {
-      httpOnly: false,
-    });
+    setAtomCookie(ctx, {});
   }
 };
 

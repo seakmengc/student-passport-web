@@ -49,7 +49,7 @@ const OfficeDetail = ({ office, admins, inCreateMode }) => {
     admins: office?.admins?.map((admin) => admin._id) ?? [],
     description: office?.description ?? '',
     hasUnits: office?.hasUnits ?? true,
-    stamp: office?.stamp ?? '',
+    stamp: getIdFromModel(office?.stamp) ?? '',
   });
 
   const onSubmit = async (input) => {

@@ -21,9 +21,8 @@ export async function ssrGetToken({ req, res }) {
   const token = await refreshIfExpired(original);
   if (token.exp !== original.exp) {
     console.log('SSR Refreshed');
-    cookies.set('persist', JSON.stringify({ ...persist, token }), {
-      httpOnly: false,
-    });
+
+    setAtomCookie({ req, res }, { ...persist, token });
   }
 
   req.token = token;
@@ -78,6 +77,19 @@ export function throwRedirectError(destination, clearCreds = true) {
     destination,
     clearCreds,
   };
+}
+
+export function setAtomCookie(ctx, allAtoms) {
+  const cookies = new Cookies(ctx.req, ctx.res);
+  cookies.set('persist', JSON.stringify(allAtoms), {
+    httpOnly: false,
+  });
+}
+
+export function getAtomCookie(ctx) {
+  return JSON.parse(
+    decodeURIComponent(new Cookies(ctx.req, ctx.res).get('persist') ?? '')
+  );
 }
 
 export function isInServerSide() {

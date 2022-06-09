@@ -2,6 +2,7 @@ import { atom } from 'recoil';
 import { getRecoil, setRecoil } from 'recoil-nexus';
 import { useGetApi } from 'src/utils/api';
 import { useEffectPersisAtom } from 'src/utils/atom-effect';
+import { officesState } from './offices';
 import { setLogout, tokenState } from './token';
 
 export const authState = atom({
@@ -17,12 +18,20 @@ export const setAuth = async (accessToken = null) => {
     accessToken ?? getRecoil(tokenState).accessToken
   );
 
-  if (error) {
+  const myOfficesData = await useGetApi(
+    'auth/me/office',
+    {},
+    accessToken ?? getRecoil(tokenState).accessToken
+  );
+
+  console.log({ error, myOfficesData });
+  if (error || myOfficesData.error) {
     setLogout();
     return;
   }
 
   setRecoil(authState, data);
+  setRecoil(officesState, myOfficesData.data.offices);
 
   return data;
 };

@@ -1,4 +1,5 @@
 import { authState } from 'src/states/auth';
+import { getMyOffices } from 'src/states/offices';
 import { getAtom } from 'src/utils/atom-effect';
 import { isEmpty } from 'src/utils/func';
 
@@ -13,7 +14,7 @@ export class OfficePerm {
       return false;
     }
 
-    return auth.admins?.includes(officeId) ?? false;
+    return getMyOffices()?.includes(officeId) ?? false;
   }
 
   static isSuperAdmin(ctx) {

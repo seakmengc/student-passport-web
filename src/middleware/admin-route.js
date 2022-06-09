@@ -1,3 +1,4 @@
+import { retrieveMyOffices, getMyOffices } from 'src/states/offices';
 import { isAccessTokenExpired, parseJwt } from 'src/utils/jwt';
 import {
   ssrCallbackHandler,
@@ -22,6 +23,8 @@ export const AdminRoute = (callback = null) => {
         },
       };
     }
+
+    await retrieveMyOffices(ctx);
 
     return callback
       ? callback(ctx)
