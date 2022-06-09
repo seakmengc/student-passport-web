@@ -15,7 +15,7 @@ export function getMyOffices() {
 }
 
 export async function retrieveMyOffices(ctx) {
-  const curr = await getRecoilPromise(officesState);
+  const curr = getRecoil(officesState);
   if (curr !== null) {
     return;
   }

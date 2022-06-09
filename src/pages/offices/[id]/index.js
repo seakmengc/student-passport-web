@@ -14,7 +14,7 @@ import { ssrGetToken } from 'src/utils/ssr';
 import OfficeRenderer from 'src/components/offices/detail';
 
 //TODO: finish
-const renderChildrenCards = (office) => {
+const renderChildrenCards = (office, router) => {
   return (
     <>
       <Typography variant='h4' className='pb-4'>
@@ -61,15 +61,15 @@ const renderChildrenCards = (office) => {
 const OfficeDetail = ({ office }) => {
   const router = useRouter();
 
-  const renderContent = () => {
+  const renderContent = (office) => {
     if (office?.children?.length > 0) {
-      return renderChildrenCards(office);
+      return renderChildrenCards(office, router);
     }
-
+    console.log({ office });
     return <OfficeRenderer office={office}></OfficeRenderer>;
   };
 
-  return <>{renderContent()}</>;
+  return <>{renderContent(office)}</>;
 };
 
 export default OfficeDetail;

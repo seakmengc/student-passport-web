@@ -1,26 +1,3 @@
-// ** MUI Imports
-import Grid from '@mui/material/Grid';
-
-// ** Icons Imports
-import Poll from 'mdi-material-ui/Poll';
-import CurrencyUsd from 'mdi-material-ui/CurrencyUsd';
-import HelpCircleOutline from 'mdi-material-ui/HelpCircleOutline';
-import BriefcaseVariantOutline from 'mdi-material-ui/BriefcaseVariantOutline';
-
-// ** Custom Components Imports
-import CardStatisticsVerticalComponent from 'src/@core/components/card-statistics/card-stats-vertical';
-
-// ** Styled Component Import
-import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts';
-
-// ** Demo Components Imports
-import Table from 'src/views/dashboard/Table';
-import Trophy from 'src/views/dashboard/Trophy';
-import TotalEarning from 'src/views/dashboard/TotalEarning';
-import StatisticsCard from 'src/views/dashboard/StatisticsCard';
-import WeeklyOverview from 'src/views/dashboard/WeeklyOverview';
-import DepositWithdraw from 'src/views/dashboard/DepositWithdraw';
-import SalesByCountries from 'src/views/dashboard/SalesByCountries';
 import { useGetApi } from 'src/utils/api';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -32,17 +9,40 @@ import {
   CardContent,
   CardActions,
   Button,
+  Grid,
 } from '@mui/material';
 import { useRouter } from 'next/router';
+
+const defaultProgress = {
+  completed: false,
+  numOfQuestsCompleted: 0,
+  quests: [],
+};
 
 const Dashboard = () => {
   const [offices, setOffices] = useState([]);
   const router = useRouter();
+  const auth = useRecoilValue(authState);
 
   useEffect(async () => {
-    const { data, error } = await useGetApi('office');
+    const [officesData, studentOfficesData] = await Promise.all([
+      useGetApi('office'),
+      useGetApi('student-office'),
+    ]);
 
-    setOffices(data);
+    setOffices(
+      officesData.data.map((office) => {
+        return {
+          ...office,
+          progress:
+            studentOfficesData.data.find(
+              (studentOffice) => studentOffice.office === office._id
+            ) ?? defaultProgress,
+        };
+      })
+    );
+
+    console.log(officesData.data);
   }, []);
 
   return (
@@ -50,19 +50,23 @@ const Dashboard = () => {
       {offices.map((office) => {
         return (
           <Grid item xs={12} sm={6} md={4}>
-            <Card>
+            <Card hov>
               <CardContent>
                 <Typography
                   sx={{ fontSize: 14 }}
                   color='text.secondary'
                   gutterBottom
                 >
-                  {office.name}
+                  {office.progress.numOfQuestsCompleted}
+                  {'/'}
+                  {office.progress.quests.length}
                 </Typography>
                 <Typography variant='h5' component='div'>
                   {office.name}
                 </Typography>
-                <Typography variant='body2'>{office.name}</Typography>
+                <Typography variant='body2'>
+                  {office.progress.completed ? 'Yes' : 'No'}
+                </Typography>
               </CardContent>
               <CardActions>
                 <Button

@@ -24,7 +24,7 @@ export const AdminRoute = (callback = null) => {
       };
     }
 
-    await retrieveMyOffices(ctx);
+    // await retrieveMyOffices(ctx);
 
     return callback
       ? callback(ctx)
