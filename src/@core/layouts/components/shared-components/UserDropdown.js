@@ -136,16 +136,26 @@ const UserDropdown = () => {
           </Box>
         </Box>
         <Divider sx={{ mt: 0, mb: 1 }} />
-        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
+        <MenuItem
+          sx={{ p: 0 }}
+          onClick={() => {
+            router.push('/profile/my');
+          }}
+        >
           <Box sx={styles}>
             <AccountOutline sx={{ marginRight: 2 }} />
             Profile
           </Box>
         </MenuItem>
-        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
+        <MenuItem
+          sx={{ p: 0 }}
+          onClick={() => {
+            router.push('/leaderboard');
+          }}
+        >
           <Box sx={styles}>
             <EmailOutline sx={{ marginRight: 2 }} />
-            Inbox
+            Leaderboard
           </Box>
         </MenuItem>
         <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose()}>

@@ -3,7 +3,13 @@ const path = require('path');
 module.exports = {
   trailingSlash: false,
   reactStrictMode: false,
-  images: { domains: ['localhost', '*.paragoniu-student-passport.com'] },
+  images: {
+    domains: [
+      'localhost',
+      '*.paragoniu-student-passport.com',
+      'avatars.dicebear.com',
+    ],
+  },
 
   experimental: {
     esmExternals: false,
