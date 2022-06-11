@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { StudentLayout } from 'src/layouts/StudentLayout';
 import { StudentRoute } from 'src/middleware/student-route';
 import { useGetApi } from 'src/utils/api';
 
@@ -38,6 +39,8 @@ const Leaderboard = () => {
     </div>
   );
 };
+
+Leaderboard.getLayout = (page) => <StudentLayout>{page}</StudentLayout>;
 
 export default Leaderboard;
 

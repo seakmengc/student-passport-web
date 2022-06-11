@@ -68,7 +68,7 @@ export const CrudActions = ({
           </DialogTitle>
           <DialogContent>
             <DialogContentText>
-              (This action cannot be undone!)
+              This action cannot be undone!
             </DialogContentText>
           </DialogContent>
           <DialogActions>

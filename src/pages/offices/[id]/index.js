@@ -12,6 +12,7 @@ import {
 import { StudentRoute } from 'src/middleware/student-route';
 import { ssrGetToken } from 'src/utils/ssr';
 import OfficeRenderer from 'src/components/offices/detail';
+import { StudentLayout } from 'src/layouts/StudentLayout';
 
 //TODO: finish
 const renderChildrenCards = (office, router) => {
@@ -71,6 +72,8 @@ const OfficeDetail = ({ office }) => {
 
   return <>{renderContent(office)}</>;
 };
+
+OfficeDetail.getLayout = (page) => <StudentLayout>{page}</StudentLayout>;
 
 export default OfficeDetail;
 

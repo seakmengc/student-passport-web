@@ -6,6 +6,7 @@ import { StudentRoute } from 'src/middleware/student-route';
 import { getUploadUrl } from 'src/utils/user';
 import { useGetApi } from 'src/utils/api';
 import Image from 'next/image';
+import { StudentLayout } from 'src/layouts/StudentLayout';
 
 const ProfileDetail = () => {
   const [profile, setProfile] = useState();
@@ -44,6 +45,8 @@ const ProfileDetail = () => {
     </div>
   );
 };
+
+ProfileDetail.getLayout = (page) => <StudentLayout>{page}</StudentLayout>;
 
 export default ProfileDetail;
 

@@ -25,6 +25,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { CustomSingleChip } from 'src/@core/components/forms/custom-single-chip';
 import CustomImage from 'src/@core/components/forms/custom-image';
 import { CustomTextField } from 'src/@core/components/forms/custom-text-field';
+import { StudentLayout } from 'src/layouts/StudentLayout';
 
 const ImgStyled = styled('img')(({ theme }) => ({
   width: 120,
@@ -83,7 +84,7 @@ const renderAnswer = (quest) => {
 const Quests = ({ quests, latest, office }) => {
   const theme = useTheme();
   const [activeIndex, setActiveIndex] = useState(2);
-  const maxIndex = quests.length - 1;
+  const maxIndex = Math.max(quests.length - 1, 0);
 
   const handleNext = () => {
     setActiveIndex((prevActiveIndex) => (prevActiveIndex + 1) % maxIndex);
@@ -138,6 +139,8 @@ const Quests = ({ quests, latest, office }) => {
     </Stack>
   );
 };
+
+Quests.getLayout = (page) => <StudentLayout>{page}</StudentLayout>;
 
 export default Quests;
 

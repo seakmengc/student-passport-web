@@ -13,6 +13,8 @@ import BlankLayout from 'src/@core/layouts/BlankLayout';
 
 // ** Demo Imports
 import FooterIllustrations from 'src/views/pages/misc/FooterIllustrations';
+import { useRouter } from 'next/router';
+import { route } from 'next/dist/server/router';
 
 // ** Styled Components
 const BoxWrapper = styled(Box)(({ theme }) => ({
@@ -45,6 +47,8 @@ const TreeIllustration = styled('img')(({ theme }) => ({
 }));
 
 const Error404 = () => {
+  const router = useRouter();
+
   return (
     <Box className='content-center'>
       <Box
@@ -77,11 +81,16 @@ const Error404 = () => {
             layout='intrinsic'
           />
         </div>
-        <Link passHref href='/'>
-          <Button component='a' variant='contained' sx={{ px: 5.5 }}>
-            Back to Home
-          </Button>
-        </Link>
+        <Button
+          component='a'
+          variant='contained'
+          sx={{ px: 5.5 }}
+          onClick={() => {
+            router.back();
+          }}
+        >
+          Back
+        </Button>
       </Box>
       <FooterIllustrations
         image={<TreeIllustration alt='tree' src='/images/pages/tree.png' />}

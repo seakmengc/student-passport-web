@@ -29,13 +29,13 @@ const navigation = () => {
     {
       title: 'Account Settings',
       icon: AccountCogOutline,
-      path: '/account-settings',
+      path: '/admin/account-settings',
     },
     {
       sectionTitle: 'Users',
     },
     {
-      title: 'List',
+      title: 'User List',
       icon: ViewListIcon,
       path: '/admin/users',
     },

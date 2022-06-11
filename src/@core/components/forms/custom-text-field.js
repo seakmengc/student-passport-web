@@ -17,9 +17,12 @@ export const CustomTextField = ({
       </label>
       <input
         type={type}
+        // className={`${
+        //   !hasError ? 'border-2 border-gray-500' : 'border-2 border-error-500'
+        // } w-full rounded px-3 py-3 text-sm text-black ring-primary transition-all duration-150 ease-linear focus:border-0 focus:outline-none focus:ring-2`}
         className={`${
-          !hasError ? 'border-0' : 'border-2 border-error-500'
-        } w-full rounded px-3 py-3 text-sm text-black shadow ring-primary transition-all duration-150 ease-linear focus:outline-none focus:ring`}
+          !hasError ? 'border-2 border-gray-300' : 'border-2 border-error-500'
+        } w-full rounded px-3 py-3 text-sm text-black shadow-sm outline-primary transition-all duration-150 ease-linear`}
         placeholder={label}
         {...register}
       />

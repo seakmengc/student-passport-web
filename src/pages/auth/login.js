@@ -197,13 +197,13 @@ const LoginPage = () => {
             display: 'flex',
             alignItems: 'center',
             flexWrap: 'wrap',
-            justifyContent: 'space-between',
+            justifyContent: 'end',
           }}
         >
-          <CustomCheckbox
+          {/* <CustomCheckbox
             label='Remember Me'
             {...registerField(form, 'rememberMe')}
-          />
+          /> */}
           <Link passHref href='/auth/forgot-password'>
             <LinkStyled>Forgot Password?</LinkStyled>
           </Link>

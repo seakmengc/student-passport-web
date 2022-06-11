@@ -168,7 +168,11 @@ const UserDropdown = () => {
         <MenuItem
           sx={{ p: 0 }}
           onClick={() => {
-            router.push('/account-settings');
+            if (authStore.isAdmin) {
+              router.push('/admin/account-settings');
+            } else {
+              router.push('/account-settings');
+            }
           }}
         >
           <Box sx={styles}>

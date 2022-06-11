@@ -12,6 +12,13 @@ import {
   tableCellClasses,
   Pagination,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
@@ -73,6 +80,19 @@ export const CrudTable = ({
   const [search, setSearch] = useState('');
   const [reload, setReload] = useState(false);
   const [alert, setAlert] = useState(null);
+  const [dialog, setDialog] = useState({ open: false });
+
+  const handleClose = () => {
+    setDialog({ ...dialog, open: false });
+  };
+
+  const openDialog = ({
+    title = 'Are you sure want to delete?',
+    content = 'This action cannot be undone!',
+    onYes,
+  }) => {
+    setDialog({ title, content, onYes, open: true });
+  };
 
   useEffect(() => {
     onPageChange(null, pagination.currentPage ?? 1);
@@ -106,6 +126,34 @@ export const CrudTable = ({
 
   return (
     <>
+      <Dialog
+        open={dialog.open}
+        onClose={handleClose}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+      >
+        <DialogTitle>{dialog?.title}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{dialog?.content}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} autoFocus>
+            No
+          </Button>
+          <Button
+            onClick={async () => {
+              await dialog?.onYes();
+
+              handleClose();
+            }}
+            color='error'
+            variant='contained'
+          >
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {alert !== '' && (
         <div className='mb-3 flex flex-row justify-end'>
           <AlertCommon
@@ -165,12 +213,14 @@ export const CrudTable = ({
                   {cols.map((col) => {
                     return (
                       <StyledTableCell align='left' {...col.format}>
-                        {getArrByField(row, col.field)}
+                        {col.getCell
+                          ? col.getCell(row)
+                          : getArrByField(row, col.field)}
                       </StyledTableCell>
                     );
                   })}
                   <StyledTableCell align='right'>
-                    {getCustomActions && getCustomActions(row)}
+                    {getCustomActions && getCustomActions(row, openDialog)}
                     <CrudActions
                       nameIdentifier={getNameIdentifier(row)}
                       onShowClick={
