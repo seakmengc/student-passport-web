@@ -1,7 +1,8 @@
 import useMediaQuery from '@mui/material/useMediaQuery';
 import VerticalAppBarContent from './components/student/AppBarContent';
 import { useSettings } from 'src/@core/hooks/useSettings';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import { DivingScuba } from 'mdi-material-ui';
 
 export const StudentLayout = ({ children }) => {
   // ** Hooks
@@ -18,18 +19,18 @@ export const StudentLayout = ({ children }) => {
   const hidden = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   return (
-    <div>
+    <Box>
       <VerticalAppBarContent
         hidden={hidden}
         settings={settings}
         saveSettings={saveSettings}
       />
-      <div className='px-4 lg:px-36'>
+      <Box className='px-4 lg:px-36'>
         <Typography variant='h4'>Welcome to Student Passport!</Typography>
 
         <div className='pt-4'>{children}</div>
-      </div>
-    </div>
+      </Box>
+    </Box>
 
     // <VerticalLayout
     //   hidden={hidden}

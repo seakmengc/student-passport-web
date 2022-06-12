@@ -13,3 +13,7 @@ export const getIdFromModel = (prop) => {
 
   return prop._id;
 };
+
+export const findByModelIdPredicate = (findModel) => {
+  return (each) => each._id === findModel._id;
+};

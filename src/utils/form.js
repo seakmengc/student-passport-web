@@ -58,7 +58,7 @@ export const setFormErrorFromApi = (form, data) => {
 
 export const useReactHookForm = (schema, defaultValues = {}) => {
   return useForm({
-    resolver: yupResolver(schema),
+    resolver: schema ? yupResolver(schema) : null,
     defaultValues,
   });
 };

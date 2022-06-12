@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Chip,
   Divider,
   Grid,
   MobileStepper,
@@ -11,9 +12,9 @@ import {
   useTheme,
 } from '@mui/material';
 import { Radio } from '@nextui-org/react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { StudentRoute } from 'src/middleware/student-route';
-import { useGetApi } from 'src/utils/api';
+import { useGetApi, usePostApi, usePostUploadApi } from 'src/utils/api';
 import { ssrGetToken } from 'src/utils/ssr';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
@@ -26,77 +27,262 @@ import { CustomSingleChip } from 'src/@core/components/forms/custom-single-chip'
 import CustomImage from 'src/@core/components/forms/custom-image';
 import { CustomTextField } from 'src/@core/components/forms/custom-text-field';
 import { StudentLayout } from 'src/layouts/StudentLayout';
+import {
+  registerField,
+  registerSelectField,
+  useReactHookForm,
+} from 'src/utils/form';
+import { FormWrapper } from 'src/@core/components/forms/wrapper';
+import * as yup from 'yup';
+import { findByModelIdPredicate } from 'src/utils/model';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import CloseIcon from '@mui/icons-material/Close';
+import CheckIcon from '@mui/icons-material/Check';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import LockIcon from '@mui/icons-material/Lock';
+import { getUploadUrl } from 'src/utils/user';
+import { AlertCommon } from 'src/@core/components/alerts/common';
 
 const ImgStyled = styled('img')(({ theme }) => ({
-  width: 120,
-  height: 120,
+  width: 250,
+  height: 250,
   marginRight: theme.spacing(6.25),
   borderRadius: theme.shape.borderRadius,
 }));
 
-const renderAnswer = (quest) => {
-  if (quest.questType === 'input') {
-    return <CustomTextField label='Type your answer here'></CustomTextField>;
+const onImageChange = async (form, file, setImgSrc) => {
+  const reader = new FileReader();
+  const { files } = file.target;
+  if (files && files.length !== 0) {
+    reader.onload = () => setImgSrc(reader.result);
+    reader.readAsDataURL(files[0]);
+
+    const { data, error } = await usePostUploadApi(files[0]);
+    if (error) {
+      console.error(data);
+      return;
+    }
+
+    form.setValue('upload', data._id);
   }
-
-  if (quest.questType === 'media') {
-    return (
-      <Box
-        className='grid place-content-center'
-        variant='contained'
-        htmlFor='upload'
-      >
-        <div>
-          <ImgStyled className='p-3' />
-        </div>
-
-        <input
-          hidden
-          type='file'
-          // onChange={onImageChange}
-          accept='image/png, image/jpeg'
-          id='upload'
-        />
-
-        <Typography variant='caption' sx={{ marginTop: 5 }}>
-          Allowed PNG or JPEG. Max size of 1MB.
-        </Typography>
-      </Box>
-    );
-  }
-
-  return (
-    <CustomSingleChip
-      idData={quest.possibleAnswers.map((possible) => ({
-        id: possible._id,
-        data: possible.answer,
-      }))}
-      label=''
-      register={{
-        onChange: (selected) => {
-          console.log(selected);
-        },
-      }}
-    ></CustomSingleChip>
-  );
 };
 
-const Quests = ({ quests, latest, office }) => {
+const getFieldBasedOnQuestType = (questType) => {
+  if (questType === 'mcq') {
+    return 'answer';
+  } else if (questType === 'input') {
+    return 'input';
+  } else {
+    return 'upload';
+  }
+};
+
+const schema = yup
+  .object({
+    quest: yup.string().required(),
+    // questType: yup.string().required(),
+    // answer: yup.string().when('questType', (questType, schema) => {
+    //   if (questType !== 'mcq') {
+    //     return schema;
+    //   }
+
+    //   return schema.required();
+    // }),
+    // input: yup.string().when('questType', (questType, schema) => {
+    //   if (questType !== 'input') {
+    //     return schema;
+    //   }
+
+    //   return schema.required();
+    // }),
+    // upload: yup.string().when('questType', (questType, schema) => {
+    //   if (questType !== 'media') {
+    //     return schema;
+    //   }
+
+    //   return schema.required();
+    // }),
+  })
+  .required();
+
+const getColorByStatus = (status) => {
+  if (status === 'approved') {
+    return 'success';
+  }
+
+  if (status === 'rejected') {
+    return 'error';
+  }
+
+  return 'secondary';
+};
+
+const getIconByStatus = (status) => {
+  if (!status) {
+    return <LockIcon />;
+  }
+
+  if (status === 'approved') {
+    return <CheckIcon />;
+  }
+
+  if (status === 'rejected') {
+    return <CloseIcon />;
+  }
+
+  return <AccessTimeIcon />;
+};
+
+const Quests = ({ quests, office }) => {
   const theme = useTheme();
-  const [activeIndex, setActiveIndex] = useState(2);
-  const maxIndex = Math.max(quests.length - 1, 0);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [maxIndex, setMaxIndex] = useState(Math.max(quests.length - 1, 0));
+  const form = useReactHookForm();
+  const uploadRef = useRef();
+  const [imgSrc, setImgSrc] = useState();
+  const [alert, setAlert] = useState();
 
-  const handleNext = () => {
-    setActiveIndex((prevActiveIndex) => (prevActiveIndex + 1) % maxIndex);
+  useEffect(async () => {
+    if (!quests) {
+      return;
+    }
+
+    console.log(quests);
+    const currIndex = quests.findIndex(
+      (each) => !each.submission || each.submission.status === 'rejected'
+    );
+    if (currIndex < 0) {
+      return;
+    }
+
+    const latestNew = quests.findIndex((each) => !each.submission);
+    setMaxIndex(latestNew < 0 ? quests.length - 1 : latestNew);
+    setActiveIndex(currIndex);
+    if (quests[currIndex].submission?.status === 'rejected') {
+      setAlert({ type: 'error', message: quests[currIndex].submission.reason });
+    }
+  }, []);
+
+  const handleNext = (forceIndex) => {
+    const next = forceIndex ?? activeIndex + 1;
+    if (next >= quests.length) {
+      return;
+    }
+
+    // form.setValue()
+
+    if (quests[next].questType === 'media') {
+      setImgSrc(getUploadUrl(quests[next].submission?.upload));
+    }
+
+    setMaxIndex(Math.max(next, maxIndex));
+    setActiveIndex(next);
+    if (quests[next].submission?.status === 'rejected') {
+      setAlert({ type: 'error', message: quests[next].submission.reason });
+    } else {
+      setAlert(null);
+    }
   };
 
-  const handleBack = () => {
-    setActiveIndex((prevActiveIndex) => (prevActiveIndex - 1) % maxIndex);
+  const handleSubmit = async (input) => {
+    setAlert(null);
+    const curr = quests[activeIndex];
+
+    const submitData = { quest: curr._id };
+    submitData[getFieldBasedOnQuestType(curr.questType)] =
+      input[getFieldBasedOnQuestType(curr.questType)];
+
+    const { data, error } = await usePostApi('student-quest', submitData);
+
+    curr['submission'] = data;
+    curr['canSubmit'] = data.status === 'rejected';
+    if (error) {
+      setAlert({ type: 'error', message: data.message });
+
+      return;
+    }
+
+    if (curr['submission'].status === 'rejected') {
+      setAlert({ type: 'error', message: curr['submission'].reason });
+
+      return;
+    }
+
+    handleNext();
   };
 
-  console.log(quests);
+  const renderAnswer = (form, quest) => {
+    if (quest.questType === 'input') {
+      return (
+        <CustomTextField
+          label='Type your answer here'
+          defaultValue={quest.submission?.input}
+          {...(!quest.canSubmit ? {} : registerField(form, 'input'))}
+        ></CustomTextField>
+      );
+    }
 
-  if (maxIndex === 0) {
+    if (quest.questType === 'media') {
+      return (
+        <Box
+          className='grid place-content-center justify-center'
+          variant='contained'
+        >
+          <div>
+            <ImgStyled
+              className='p-3 hover:cursor-pointer'
+              src={imgSrc}
+              onClick={
+                quest.canSubmit
+                  ? () => {
+                      uploadRef.current?.click();
+                    }
+                  : null
+              }
+            />
+          </div>
+
+          <input
+            ref={uploadRef}
+            hidden
+            type='file'
+            onChange={(file) => onImageChange(form, file, setImgSrc)}
+            accept='image/png, image/jpeg, image/jpg, video/mp4'
+          />
+
+          <Button
+            onClick={
+              quest.canSubmit
+                ? () => {
+                    uploadRef.current?.click();
+                  }
+                : null
+            }
+          >
+            Click to Upload
+          </Button>
+
+          <Typography variant='caption' sx={{ marginTop: 5 }}>
+            Max size of 1MB.
+          </Typography>
+        </Box>
+      );
+    }
+
+    return (
+      <CustomSingleChip
+        idData={quest.possibleAnswers.map((possible) => ({
+          id: possible._id,
+          data: possible.answer,
+        }))}
+        label=''
+        defaultSelected={quest.submission?.answer}
+        {...(!quest.canSubmit ? {} : registerSelectField(form, 'answer'))}
+      ></CustomSingleChip>
+    );
+  };
+
+  if (!quests || quests.length === 0) {
     return <p>No Quests Yet!</p>;
   }
 
@@ -112,30 +298,93 @@ const Quests = ({ quests, latest, office }) => {
           {office.name}
         </Typography>
 
-        <Typography variant='h5'>
-          Question {(activeIndex + 1).toString().padStart(2, '0')}
-          <Typography variant='h6' color='gray' className='inline'>
-            /{(maxIndex + 1).toString().padStart(2, '0')}
-          </Typography>
-        </Typography>
+        <div className='flex flex-row justify-between'>
+          <div>
+            <Typography variant='h5' className='inline'>
+              Question {(activeIndex + 1).toString().padStart(2, '0')}
+            </Typography>
+
+            <Typography variant='h6' color='gray' className='inline'>
+              /{quests.length.toString().padStart(2, '0')}
+            </Typography>
+          </div>
+
+          <Box>
+            {/* <Button
+              variant='text'
+              // className='lg:h-18 h-10 w-1/3 rounded-md shadow-lg lg:w-1/6'
+              onClick={handleNext}
+            >
+              Next <KeyboardArrowRightIcon />
+            </Button> */}
+            <Chip
+              size='small'
+              className='mx-1 my-1 capitalize shadow-sm'
+              label={quests[activeIndex].submission?.status ?? 'New'}
+              variant='filled'
+              color={
+                quests[activeIndex].submission?.status
+                  ? getColorByStatus(quests[activeIndex].submission?.status)
+                  : 'info'
+              }
+            />
+          </Box>
+        </div>
         <Divider></Divider>
 
-        <Typography variant='h7' className='pt-7'>
+        <div className='flex flex-wrap'>
+          {quests.map((quest, ind) => {
+            return (
+              <span className='m-1'>
+                <Chip
+                  icon={getIconByStatus(quest.submission?.status)}
+                  label={ind + 1}
+                  variant={
+                    quest.submission?.status || activeIndex === ind
+                      ? 'filled'
+                      : 'outlined'
+                  }
+                  color={
+                    activeIndex === ind
+                      ? 'primary'
+                      : quest.submission?.status
+                      ? getColorByStatus(quest.submission?.status)
+                      : 'secondary'
+                  }
+                  onClick={() => handleNext(ind)}
+                  disabled={ind > maxIndex}
+                />
+              </span>
+            );
+          })}
+        </div>
+
+        <AlertCommon
+          open={alert}
+          msg={alert?.message}
+          error={alert?.type === 'error'}
+          onClose={() => setAlert(null)}
+        ></AlertCommon>
+
+        <Typography variant='h6' className='pt-7'>
           {quests[activeIndex].quest}
         </Typography>
       </div>
 
-      <div>{renderAnswer(quests[activeIndex])}</div>
+      <FormWrapper form={form} onSubmit={handleSubmit}>
+        <div>{renderAnswer(form, quests[activeIndex])}</div>
 
-      <div className='flex flex-row justify-end'>
-        <Button
-          variant='contained'
-          className='lg:h-18 h-12 w-1/3 rounded-md shadow-lg lg:w-1/6'
-          onClick={handleNext}
-        >
-          Next <KeyboardArrowRightIcon />
-        </Button>
-      </div>
+        <div className='flex flex-row justify-end'>
+          <Button
+            type='submit'
+            variant='contained'
+            className='lg:h-18 h-10 w-1/3 rounded-md shadow-sm lg:w-1/6'
+            disabled={!quests[activeIndex].canSubmit}
+          >
+            Submit
+          </Button>
+        </div>
+      </FormWrapper>
     </Stack>
   );
 };
@@ -147,21 +396,27 @@ export default Quests;
 export const getServerSideProps = StudentRoute(async (ctx) => {
   const { accessToken } = await ssrGetToken(ctx);
 
-  const [quests, officeData, latestQuest] = await Promise.all([
-    useGetApi('quest/office/' + ctx.params.id, {}, accessToken),
-    useGetApi('office/' + ctx.params.id, {}, accessToken),
-    useGetApi(
-      'student-quest/office/' + ctx.params.id + '/latest',
-      {},
-      accessToken
-    ),
-  ]);
+  // const [quests, officeData, myQuests, latestQuest] = await Promise.all([
+  //   useGetApi('quest/office/' + ctx.params.id, {}, accessToken),
+  //   useGetApi('office/' + ctx.params.id, {}, accessToken),
+  //   useGetApi('student-quest/office/' + ctx.params.id, {}, accessToken),
+  //   useGetApi(
+  //     'student-quest/office/' + ctx.params.id + '/latest',
+  //     {},
+  //     accessToken
+  //   ),
+  // ]);
+
+  const myQuests = await useGetApi(
+    'student-quest/office/' + ctx.params.id,
+    {},
+    accessToken
+  );
 
   return {
     props: {
-      quests: quests.data,
-      latest: latestQuest.data,
-      office: officeData.data,
+      quests: myQuests.data.quests,
+      office: myQuests.data.office,
     },
   };
 });

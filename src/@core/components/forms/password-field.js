@@ -32,7 +32,7 @@ export const PasswordField = ({ register, label, error = '' }) => {
         type={showPassword ? 'text' : 'password'}
         className={`${
           !hasError ? 'border-2 border-gray-300' : 'border-2 border-error-500'
-        } placeholder-primary-300 w-full rounded bg-white px-3 py-3 text-sm text-black shadow outline-primary transition-all duration-150 ease-linear`}
+        } placeholder-primary-300 w-full rounded bg-white px-3 py-3 text-sm text-black shadow-sm outline-primary transition-all duration-150 ease-linear`}
         placeholder={label}
         {...register}
       />

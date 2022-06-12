@@ -1,6 +1,7 @@
 export const CustomTextField = ({
   register,
   label,
+  defaultValue = '',
   type = 'text',
   error = '',
 }) => {
@@ -24,6 +25,8 @@ export const CustomTextField = ({
           !hasError ? 'border-2 border-gray-300' : 'border-2 border-error-500'
         } w-full rounded px-3 py-3 text-sm text-black shadow-sm outline-primary transition-all duration-150 ease-linear`}
         placeholder={label}
+        defaultValue={defaultValue}
+        disabled={!register}
         {...register}
       />
       {hasError && (

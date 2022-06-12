@@ -97,6 +97,9 @@ export const CustomSingleChip = ({
   const [selected, setSelected] = useState(defaultSelected);
 
   useEffect(() => {
+    if (!register) {
+      return;
+    }
     register.onChange(selected);
   }, [selected]);
 
@@ -117,33 +120,7 @@ export const CustomSingleChip = ({
       >
         {label}
       </label>
-      {/* <Select
-        className='w-full border-none bg-white shadow-sm ring-0'
-        displayEmpty
-        value={selected}
-        onChange={handleChange}
-        input={<OutlinedInput />}
-        MenuProps={MenuProps}
-        inputProps={{ 'aria-label': 'Without label' }}
-        renderValue={(selected) => {
-          if (selected === null) {
-            return <em>Select</em>;
-          }
-
-          return <p className='text-label-900'>{selected}</p>;
-        }}
-      >
-        {idData.map((each) => (
-          <MenuItem
-            key={each.id}
-            value={each.id}
-            style={getStyles(each, selected, theme)}
-          >
-            {each.data}
-          </MenuItem>
-        ))}
-      </Select> */}
-      <RadioGroup value={selected} onChange={handleChange}>
+      <RadioGroup value={selected} onChange={register ? handleChange : null}>
         {idData.map((each) => (
           <FormControlLabel
             key={each.id}
