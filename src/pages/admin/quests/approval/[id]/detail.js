@@ -117,7 +117,7 @@ const QuestDetail = ({ studentQuest }) => {
       return;
     }
 
-    enqueueSnackbar(`Answer ${input['isApprove'] ? 'approved' : 'rejected'}!`, {
+    enqueueSnackbar(`Quest ${input['isApproved'] ? 'approved' : 'rejected'}!`, {
       variant: 'success',
     });
   };
@@ -133,7 +133,6 @@ const QuestDetail = ({ studentQuest }) => {
       );
     }
 
-    console.log(type);
     if (type === 'mcq') {
       return (
         <RadioGroup value={studentQuest.answer}>
@@ -153,7 +152,7 @@ const QuestDetail = ({ studentQuest }) => {
       <Image
         src={getUploadUrl(getArrByField(studentQuest, 'upload'))}
         width='100%'
-        height='380'
+        height='100%'
       ></Image>
     );
   };

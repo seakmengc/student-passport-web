@@ -27,6 +27,7 @@ import { setLogout, tokenState } from 'src/states/token';
 import { useDeleteApi } from 'src/utils/api';
 import { useRecoilValue } from 'recoil';
 import { authState } from 'src/states/auth';
+import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 
 // ** Styled Components
 const BadgeContentSpan = styled('span')(({ theme }) => ({
@@ -103,7 +104,14 @@ const UserDropdown = () => {
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <Box sx={{ pt: 2, pb: 3, px: 4 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box
+            sx={{ display: 'flex', alignItems: 'center' }}
+            className='hover:cursor-pointer'
+            onClick={() => {
+              router.push('/profile/my');
+              handleDropdownClose();
+            }}
+          >
             <Badge
               overlap='circular'
               badgeContent={<BadgeContentSpan />}
@@ -140,6 +148,7 @@ const UserDropdown = () => {
           sx={{ p: 0 }}
           onClick={() => {
             router.push('/profile/my');
+            handleDropdownClose();
           }}
         >
           <Box sx={styles}>
@@ -151,20 +160,14 @@ const UserDropdown = () => {
           sx={{ p: 0 }}
           onClick={() => {
             router.push('/leaderboard');
+            handleDropdownClose();
           }}
         >
           <Box sx={styles}>
-            <EmailOutline sx={{ marginRight: 2 }} />
+            <LeaderboardIcon sx={{ marginRight: 2 }} />
             Leaderboard
           </Box>
         </MenuItem>
-        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <MessageOutline sx={{ marginRight: 2 }} />
-            Chat
-          </Box>
-        </MenuItem>
-        <Divider />
         <MenuItem
           sx={{ p: 0 }}
           onClick={() => {
@@ -173,23 +176,13 @@ const UserDropdown = () => {
             } else {
               router.push('/account-settings');
             }
+
+            handleDropdownClose();
           }}
         >
           <Box sx={styles}>
             <CogOutline sx={{ marginRight: 2 }} />
             Settings
-          </Box>
-        </MenuItem>
-        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <CurrencyUsd sx={{ marginRight: 2 }} />
-            Pricing
-          </Box>
-        </MenuItem>
-        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <HelpCircleOutline sx={{ marginRight: 2 }} />
-            FAQ
           </Box>
         </MenuItem>
         <Divider />
