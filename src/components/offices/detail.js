@@ -18,8 +18,6 @@ const Output = dynamic(
 export default function OfficeDetail({ office }) {
   const router = useRouter();
 
-  console.log(office);
-
   return (
     <div className='mx-auto w-3/4'>
       <div className='mb-4 flex flex-row justify-start'>
@@ -87,6 +85,7 @@ export default function OfficeDetail({ office }) {
           <Button
             variant='contained'
             onClick={() => router.push(router.asPath + '/quests')}
+            disabled={office.progress?.completed}
           >
             Adventure
           </Button>

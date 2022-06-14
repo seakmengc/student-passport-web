@@ -13,6 +13,8 @@ import { StudentRoute } from 'src/middleware/student-route';
 import { ssrGetToken } from 'src/utils/ssr';
 import OfficeRenderer from 'src/components/offices/detail';
 import { StudentLayout } from 'src/layouts/StudentLayout';
+import { OfficeCard } from 'src/components/pages/office';
+import { defaultProgress } from 'src/pages';
 
 //TODO: finish
 const renderChildrenCards = (office, router) => {
@@ -25,7 +27,8 @@ const renderChildrenCards = (office, router) => {
         {office?.children?.map((unit) => {
           return (
             <Grid item xs={12} sm={6} md={4}>
-              <Card>
+              <OfficeCard office={unit} />
+              {/* <Card>
                 <CardContent>
                   <Typography
                     sx={{ fontSize: 14 }}
@@ -50,7 +53,7 @@ const renderChildrenCards = (office, router) => {
                     Detail
                   </Button>
                 </CardActions>
-              </Card>
+              </Card> */}
             </Grid>
           );
         })}
@@ -66,7 +69,7 @@ const OfficeDetail = ({ office }) => {
     if (office?.children?.length > 0) {
       return renderChildrenCards(office, router);
     }
-    console.log({ office });
+
     return <OfficeRenderer office={office}></OfficeRenderer>;
   };
 
@@ -80,13 +83,39 @@ export default OfficeDetail;
 export const getServerSideProps = StudentRoute(async (ctx) => {
   const { accessToken } = await ssrGetToken(ctx);
 
-  const { data, error } = await useGetApi(
+  const officesData = await useGetApi(
     'office/' + ctx.params.id,
     {},
     accessToken
   );
 
+  if (officesData.data.children.length > 0) {
+    const studentOfficesData = await useGetApi(
+      'student-office',
+      { officeIds: officesData.data.children.map((each) => each._id) },
+      accessToken
+    );
+
+    officesData.data.children = officesData.data.children.map((each) => {
+      return {
+        ...each,
+        progress:
+          studentOfficesData?.data?.find(
+            (studentOffice) => studentOffice.office === each._id
+          ) ?? defaultProgress,
+      };
+    });
+  } else {
+    const studentOfficesData = await useGetApi(
+      'student-office',
+      { officeIds: officesData.data._id },
+      accessToken
+    );
+
+    officesData.data.progress = studentOfficesData.data[0] ?? defaultProgress;
+  }
+
   return {
-    props: { office: data },
+    props: { office: officesData.data },
   };
 });

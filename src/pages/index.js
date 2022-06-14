@@ -13,11 +13,13 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { StudentLayout } from 'src/layouts/StudentLayout';
+import { OfficeCard } from 'src/components/pages/office';
 
-const defaultProgress = {
+export const defaultProgress = {
   completed: false,
   numOfQuestsCompleted: 0,
   quests: [],
+  default: true,
 };
 
 const Dashboard = () => {
@@ -31,19 +33,19 @@ const Dashboard = () => {
       useGetApi('student-office'),
     ]);
 
-    setOffices(
-      officesData.data.map((office) => {
-        return {
-          ...office,
-          progress:
-            studentOfficesData.data.find(
-              (studentOffice) => studentOffice.office === office._id
-            ) ?? defaultProgress,
-        };
-      })
-    );
+    const mappedOffices = officesData.data.map((office) => {
+      return {
+        ...office,
+        progress:
+          studentOfficesData.data.find(
+            (studentOffice) => studentOffice.office === office._id
+          ) ?? defaultProgress,
+      };
+    });
 
-    console.log(officesData.data);
+    setOffices(mappedOffices);
+
+    console.log(studentOfficesData.data, mappedOffices);
   }, []);
 
   return (
@@ -51,7 +53,8 @@ const Dashboard = () => {
       {offices.map((office) => {
         return (
           <Grid item xs={12} sm={6} md={4}>
-            <Card hov>
+            <OfficeCard office={office} />
+            {/* <Card hov>
               <CardContent>
                 <Typography
                   sx={{ fontSize: 14 }}
@@ -80,7 +83,7 @@ const Dashboard = () => {
                   Detail
                 </Button>
               </CardActions>
-            </Card>
+            </Card> */}
           </Grid>
         );
       })}
