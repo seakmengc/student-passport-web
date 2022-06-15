@@ -72,7 +72,7 @@ const AppBarContent = (props) => {
         sx={{ display: 'flex', alignItems: 'center' }}
       >
         <ModeToggler settings={settings} saveSettings={saveSettings} />
-        <NotificationDropdown />
+        {/* <NotificationDropdown /> */}
         <UserDropdown />
       </Box>
     </Box>
