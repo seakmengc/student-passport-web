@@ -139,7 +139,7 @@ const Quests = ({ quests, office }) => {
   const [maxIndex, setMaxIndex] = useState(Math.max(quests.length - 1, 0));
   const form = useReactHookForm();
   const uploadRef = useRef();
-  const [imgSrc, setImgSrc] = useState();
+  const [imgSrc, setImgSrc] = useState('/images/no.jpeg');
   const [alert, setAlert] = useState();
 
   useEffect(async () => {
@@ -412,6 +412,8 @@ export const getServerSideProps = StudentRoute(async (ctx) => {
     {},
     accessToken
   );
+
+  console.log(myQuests);
 
   return {
     props: {

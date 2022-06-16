@@ -49,7 +49,7 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <Grid container spacing={6}>
+    <Grid container spacing={6} className='pb-7'>
       {offices.map((office) => {
         return (
           <Grid item xs={12} sm={6} md={4}>

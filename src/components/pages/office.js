@@ -45,7 +45,7 @@ export const OfficeCard = ({ office }) => {
         {/* <Typography variant='body2' sx={{ letterSpacing: '0.25px' }}>
           {office.progress.numOfQuestsCompleted}
         </Typography> */}
-        <div className='my-6 w-1/2'>
+        <div className='my-6 flex w-4/6 flex-row items-center space-x-2'>
           <Progress
             value={
               office.progress?.quests?.length > 0
@@ -57,12 +57,18 @@ export const OfficeCard = ({ office }) => {
             striped
             color='success'
             status='success'
+            className='inline-block w-3/4'
           />
-          {office.progress?.quests?.length > 0
-            ? (office.progress.numOfQuestsCompleted /
-                office.progress.quests.length) *
-              100
-            : 0}
+          <Typography variant='caption'>
+            {office.progress?.quests?.length > 0
+              ? Math.round(
+                  (office.progress.numOfQuestsCompleted /
+                    office.progress.quests.length) *
+                    10000
+                ) / 100
+              : 0}
+            %
+          </Typography>
         </div>
         <Button
           size='small'

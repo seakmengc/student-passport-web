@@ -87,6 +87,7 @@ const TabAccount = () => {
 
     showSnackbar(data, error, enqueueSnackbar);
 
+    console.log(data);
     setAuthStore({
       ...authStore,
       profile: data.profile,
