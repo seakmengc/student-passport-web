@@ -56,11 +56,6 @@ export default function RegisterPage() {
 
   return (
     <>
-      <Box sx={{ mb: 6 }}>
-        <Typography variant='h5' sx={{ fontWeight: 600, marginBottom: 1.5 }}>
-          Register a User
-        </Typography>
-      </Box>
       <FormWrapper form={form} onSubmit={onSubmit}>
         <CustomTextField
           label='First Name'

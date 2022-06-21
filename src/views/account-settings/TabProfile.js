@@ -20,7 +20,8 @@ import { showSnackbar } from 'src/utils/snackbar';
 
 const ImgStyled = styled('img')(({ theme }) => ({
   width: 120,
-  height: 120,
+  // height: 120,
+  fit: 'cover',
   marginRight: theme.spacing(6.25),
   borderRadius: theme.shape.borderRadius,
 }));
@@ -104,6 +105,7 @@ const TabAccount = () => {
           <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <ImgStyled src={imgSrc} alt='Profile Pic' />
+              {/* <img src={imgSrc} fit='cover' width={120} /> */}
               <Box>
                 <ButtonStyled
                   component='label'

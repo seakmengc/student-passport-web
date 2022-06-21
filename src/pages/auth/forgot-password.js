@@ -127,6 +127,8 @@ const ForgotPassword = () => {
           justifyContent: 'center',
         }}
       >
+        <img src='/images/logo.png' width={70} height={70} />
+
         <Typography
           variant='h6'
           sx={{
@@ -141,11 +143,11 @@ const ForgotPassword = () => {
         </Typography>
       </Box>
       <Box sx={{ mb: 6 }}>
-        <Typography variant='h5' sx={{ fontWeight: 600, marginBottom: 1.5 }}>
+        {/* <Typography variant='h5' sx={{ fontWeight: 600, marginBottom: 1.5 }}>
           Welcome to {themeConfig.templateName}! 👋🏻
-        </Typography>
+        </Typography> */}
         <Typography variant='body2'>
-          Please sign-in to your account and start the adventure
+          Forgot your password? No worry we can help you reset it.
         </Typography>
       </Box>
       <FormWrapper form={form} onSubmit={onSubmit}>

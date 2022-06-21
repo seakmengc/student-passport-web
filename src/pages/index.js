@@ -44,17 +44,20 @@ const Dashboard = () => {
     });
 
     setOffices(mappedOffices);
-
-    console.log(studentOfficesData.data, mappedOffices);
   }, []);
 
   return (
-    <Grid container spacing={6} className='pb-7'>
-      {offices.map((office) => {
-        return (
-          <Grid item xs={12} sm={6} md={4}>
-            <OfficeCard office={office} />
-            {/* <Card hov>
+    <div>
+      <Typography variant='h4' className='pb-4'>
+        Welcome back, {auth?.firstName}!
+      </Typography>
+
+      <Grid container spacing={6} className='pb-7'>
+        {offices.map((office) => {
+          return (
+            <Grid item xs={12} sm={6} md={4}>
+              <OfficeCard office={office} />
+              {/* <Card hov>
               <CardContent>
                 <Typography
                   sx={{ fontSize: 14 }}
@@ -84,10 +87,11 @@ const Dashboard = () => {
                 </Button>
               </CardActions>
             </Card> */}
-          </Grid>
-        );
-      })}
-    </Grid>
+            </Grid>
+          );
+        })}
+      </Grid>
+    </div>
   );
 };
 

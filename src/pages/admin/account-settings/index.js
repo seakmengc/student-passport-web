@@ -22,6 +22,8 @@ import TabProfile from 'src/views/account-settings/TabProfile';
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css';
 import { StudentLayout } from 'src/layouts/StudentLayout';
+import { AuthRoute } from 'src/middleware/auth-route';
+import { AdminRoute } from 'src/middleware/admin-route';
 
 const Tab = styled(MuiTab)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
@@ -101,3 +103,5 @@ const AccountSettings = () => {
 };
 
 export default AccountSettings;
+
+export const getServerSideProps = AdminRoute();

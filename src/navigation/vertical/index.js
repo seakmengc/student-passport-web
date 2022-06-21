@@ -21,11 +21,11 @@ import { OfficePerm } from 'src/perms/office';
 
 const navigation = () => {
   const rtn = [
-    {
-      title: 'Dashboard',
-      icon: HomeOutline,
-      path: '/admin',
-    },
+    // {
+    //   title: 'Dashboard',
+    //   icon: HomeOutline,
+    //   path: '/admin',
+    // },
     {
       title: 'Account Settings',
       icon: AccountCogOutline,

@@ -13,10 +13,24 @@ import VerticalAppBarContent from './components/vertical/AppBarContent';
 
 // ** Hook Import
 import { useSettings } from 'src/@core/hooks/useSettings';
+import { useRouter } from 'next/router';
+import { Typography } from '@mui/material';
+
+const routeName = {
+  '': 'Dashboard',
+  '/account-settings': 'Account Settings',
+  '/users': 'User List',
+  '/users/register': 'Register new User',
+  '/offices': 'Office List',
+  '/units': 'Unit List',
+  '/quests/approval': 'Approval Queue',
+  '/telescope': 'Telescope',
+};
 
 const UserLayout = ({ children }) => {
   // ** Hooks
   const { settings, saveSettings } = useSettings();
+  const router = useRouter();
 
   /**
    *  The below variable will hide the current layout menu at given screen size.
@@ -45,6 +59,14 @@ const UserLayout = ({ children }) => {
         />
       )}
     >
+      {!router.asPath.endsWith('quests') && (
+        <div className='pb-4'>
+          <Typography variant='h5'>
+            {routeName[router.asPath.replace('/admin', '')] ?? ''}
+          </Typography>
+        </div>
+      )}
+
       {children}
     </VerticalLayout>
   );

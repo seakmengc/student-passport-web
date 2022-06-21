@@ -22,9 +22,6 @@ export default function ApprovalIndex() {
 
         return OfficePerm.isSuperAdmin();
       }}
-      onCreateClick={() => {
-        router.push(router.asPath + '/register');
-      }}
       onEditClick={(studentQuest) => {
         router.push(router.asPath + '/' + studentQuest._id);
       }}

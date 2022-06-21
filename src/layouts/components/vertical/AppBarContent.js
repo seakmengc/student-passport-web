@@ -55,6 +55,7 @@ const AppBarContent = (props) => {
         >
           <KeyboardArrowLeftIcon /> Back
         </Typography>
+
         {/* <TextField
           size='small'
           sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
@@ -67,6 +68,7 @@ const AppBarContent = (props) => {
           }}
         /> */}
       </Box>
+
       <Box
         className='actions-right'
         sx={{ display: 'flex', alignItems: 'center' }}

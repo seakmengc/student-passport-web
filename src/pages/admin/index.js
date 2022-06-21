@@ -22,6 +22,7 @@ import WeeklyOverview from 'src/views/dashboard/WeeklyOverview';
 import DepositWithdraw from 'src/views/dashboard/DepositWithdraw';
 import SalesByCountries from 'src/views/dashboard/SalesByCountries';
 import { AdminRoute } from 'src/middleware/admin-route';
+import ApprovalIndex from 'src/pages/admin/quests/approval';
 
 const Dashboard = () => {
   return (
@@ -99,6 +100,14 @@ const Dashboard = () => {
   );
 };
 
+// export default ApprovalIndex;
 export default Dashboard;
 
-export const getServerSideProps = AdminRoute();
+export const getServerSideProps = (ctx) => {
+  return {
+    redirect: {
+      destination: '/admin/quests/approval',
+      permanent: false,
+    },
+  };
+};

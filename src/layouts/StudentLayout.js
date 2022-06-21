@@ -26,8 +26,6 @@ export const StudentLayout = ({ children }) => {
         saveSettings={saveSettings}
       />
       <Box className='px-4 lg:px-36'>
-        <Typography variant='h4'>Welcome to Student Passport!</Typography>
-
         <div className='pt-4'>{children}</div>
       </Box>
     </Box>

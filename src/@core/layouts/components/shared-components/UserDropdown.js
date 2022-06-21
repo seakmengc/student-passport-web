@@ -144,22 +144,29 @@ const UserDropdown = () => {
           </Box>
         </Box>
         <Divider sx={{ mt: 0, mb: 1 }} />
+        {!authStore?.isAdmin && (
+          <MenuItem
+            sx={{ p: 0 }}
+            onClick={() => {
+              router.push('/profile/my');
+              handleDropdownClose();
+            }}
+          >
+            <Box sx={styles}>
+              <AccountOutline sx={{ marginRight: 2 }} />
+              Profile
+            </Box>
+          </MenuItem>
+        )}
         <MenuItem
           sx={{ p: 0 }}
           onClick={() => {
-            router.push('/profile/my');
-            handleDropdownClose();
-          }}
-        >
-          <Box sx={styles}>
-            <AccountOutline sx={{ marginRight: 2 }} />
-            Profile
-          </Box>
-        </MenuItem>
-        <MenuItem
-          sx={{ p: 0 }}
-          onClick={() => {
-            router.push('/leaderboard');
+            if (authStore.isAdmin) {
+              router.push('/admin/leaderboard');
+            } else {
+              router.push('/leaderboard');
+            }
+
             handleDropdownClose();
           }}
         >

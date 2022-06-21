@@ -179,7 +179,7 @@ export const CrudTable = ({
         </div>
       )}
 
-      <div className='my-6 flex flex-col'>
+      <div className='my-6 mb-4 flex flex-col'>
         <CustomSearchField
           label={searchLabel}
           onChange={(val) => {
