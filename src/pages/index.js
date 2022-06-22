@@ -34,14 +34,33 @@ const Dashboard = () => {
     ]);
 
     const mappedOffices = officesData.data.map((office) => {
+      const progress =
+        studentOfficesData.data.find(
+          (studentOffice) => studentOffice.office === office._id
+        ) ?? defaultProgress;
+
       return {
         ...office,
-        progress:
-          studentOfficesData.data.find(
-            (studentOffice) => studentOffice.office === office._id
-          ) ?? defaultProgress,
+        progress: {
+          ...progress,
+          numOfQuestsCompleted: studentOfficesData.data.reduce(
+            (prevVal, currOffice) =>
+              currOffice.parent === office._id
+                ? prevVal + currOffice.numOfQuestsCompleted
+                : prevVal,
+            progress.numOfQuestsCompleted
+          ),
+          quests: [
+            ...progress.quests,
+            ...studentOfficesData.data
+              .filter((each) => each.parent === office._id)
+              .flatMap((each) => each.quests),
+          ],
+        },
       };
     });
+
+    console.log(mappedOffices);
 
     setOffices(mappedOffices);
   }, []);
@@ -53,43 +72,11 @@ const Dashboard = () => {
       </Typography>
 
       <Grid container spacing={6} className='pb-7'>
-        {offices.map((office) => {
-          return (
-            <Grid item xs={12} sm={6} md={4}>
-              <OfficeCard office={office} />
-              {/* <Card hov>
-              <CardContent>
-                <Typography
-                  sx={{ fontSize: 14 }}
-                  color='text.secondary'
-                  gutterBottom
-                >
-                  {office.progress.numOfQuestsCompleted}
-                  {'/'}
-                  {office.progress.quests.length}
-                </Typography>
-                <Typography variant='h5' component='div'>
-                  {office.name}
-                </Typography>
-                <Typography variant='body2'>
-                  {office.progress.completed ? 'Yes' : 'No'}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button
-                  size='small'
-                  variant='contained'
-                  onClick={() => {
-                    router.push(`/offices/${office._id}`);
-                  }}
-                >
-                  Detail
-                </Button>
-              </CardActions>
-            </Card> */}
-            </Grid>
-          );
-        })}
+        {offices.map((office, ind) => (
+          <Grid item xs={12} sm={6} md={4} key={ind}>
+            <OfficeCard office={office} />
+          </Grid>
+        ))}
       </Grid>
     </div>
   );

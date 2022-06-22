@@ -17,6 +17,7 @@ import {
   Divider,
   Typography,
   Grid,
+  Box,
 } from '@mui/material';
 import moment from 'moment';
 
@@ -56,15 +57,15 @@ const ProfileDetail = () => {
     <div>
       <div className='grid justify-items-center space-y-2'>
         {profile.profileUrl && (
-          <div className='w-1/6'>
+          <Box>
             <Avatar
-              size='0.2'
               src={profile.profileUrl}
               color='gradient'
               bordered
               zoomed
+              css={{ width: 200, height: 200 }}
             />
-          </div>
+          </Box>
         )}
 
         <Typography variant='h5'>
@@ -83,6 +84,7 @@ const ProfileDetail = () => {
         {offices.map((office, index) => {
           return (
             <div
+              key={index}
               style={{ height: '350px', maxWidth: '250px' }}
               className='my-3 mx-4'
             >

@@ -41,25 +41,6 @@ const AppBarContent = (props) => {
         sx={{ mr: 2, display: 'flex', alignItems: 'center' }}
       >
         <LogoComponent></LogoComponent>
-        {/* <Typography>{router.route}</Typography> */}
-        {/* <Typography
-          variant='h7'
-          className='hover:cursor-pointer'
-          onClick={() => router.back()}
-        >
-          <KeyboardArrowLeftIcon /> Back
-        </Typography> */}
-        {/* <TextField
-          size='small'
-          sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position='start'>
-                <Magnify fontSize='small' />
-              </InputAdornment>
-            ),
-          }}
-        /> */}
       </Box>
       <Box
         className='actions-right'

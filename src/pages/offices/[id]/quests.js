@@ -1,30 +1,26 @@
 import {
+  Avatar,
   Box,
   Button,
   Chip,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Divider,
-  Grid,
-  MobileStepper,
-  Paper,
+  Slide,
   Stack,
   styled,
   Typography,
   useTheme,
 } from '@mui/material';
-import { Radio } from '@nextui-org/react';
 import { useEffect, useRef, useState } from 'react';
 import { StudentRoute } from 'src/middleware/student-route';
 import { useGetApi, usePostApi, usePostUploadApi } from 'src/utils/api';
 import { ssrGetToken } from 'src/utils/ssr';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import BottomNavigation from '@mui/material/BottomNavigation';
-import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import RestoreIcon from '@mui/icons-material/Restore';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { CustomSingleChip } from 'src/@core/components/forms/custom-single-chip';
-import CustomImage from 'src/@core/components/forms/custom-image';
 import { CustomTextField } from 'src/@core/components/forms/custom-text-field';
 import { StudentLayout } from 'src/layouts/StudentLayout';
 import {
@@ -34,14 +30,16 @@ import {
 } from 'src/utils/form';
 import { FormWrapper } from 'src/@core/components/forms/wrapper';
 import * as yup from 'yup';
-import { findByModelIdPredicate } from 'src/utils/model';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LockIcon from '@mui/icons-material/Lock';
 import { getUploadUrl } from 'src/utils/user';
 import { AlertCommon } from 'src/@core/components/alerts/common';
+import { forwardRef } from 'react';
+import { Controls, Player } from '@lottiefiles/react-lottie-player';
+import { useRecoilValue } from 'recoil';
+import { authState } from 'src/states/auth';
 
 const ImgStyled = styled('img')(({ theme }) => ({
   width: 250,
@@ -133,6 +131,10 @@ const getIconByStatus = (status) => {
   return <AccessTimeIcon />;
 };
 
+const Transition = forwardRef((props, ref) => {
+  return <Slide direction='up' ref={ref} {...props} />;
+});
+
 const Quests = ({ quests, office }) => {
   const theme = useTheme();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -141,6 +143,9 @@ const Quests = ({ quests, office }) => {
   const uploadRef = useRef();
   const [imgSrc, setImgSrc] = useState('/images/no.jpeg');
   const [alert, setAlert] = useState();
+  const [open, setOpen] = useState(false);
+  const [streaks, setStreaks] = useState(0);
+  const auth = useRecoilValue(authState);
 
   useEffect(async () => {
     if (!quests) {
@@ -204,11 +209,16 @@ const Quests = ({ quests, office }) => {
 
     if (curr['submission'].status === 'rejected') {
       setAlert({ type: 'error', message: curr['submission'].reason });
+      setStreaks(0);
 
       return;
     }
 
-    handleNext();
+    if (curr['submission'].status === 'approved') {
+      setStreaks(streaks + 1);
+    }
+
+    setOpen(true);
   };
 
   const renderAnswer = (form, quest) => {
@@ -293,6 +303,69 @@ const Quests = ({ quests, office }) => {
       justifyContent='space-between'
       className='w-full'
     >
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        onClose={() => {
+          setOpen(false);
+        }}
+      >
+        <Box className='p-4 px-8'>
+          <DialogTitle>Congratulations, {auth?.firstName}! 🎉</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Keep it up, you're done a great jobs today!
+            </DialogContentText>
+
+            {streaks > 1 && (
+              <div className='flex flex-col items-center pt-8'>
+                <Avatar
+                  sx={{
+                    width: 75,
+                    height: 75,
+                    bgcolor: 'primary.main',
+                    color: 'white',
+                    mb: 2,
+                    fontSize: 24,
+                  }}
+                >
+                  {streaks}
+                </Avatar>
+                <Typography variant='body2'>streaks in a Row!</Typography>
+              </div>
+            )}
+
+            <Player
+              autoplay
+              loop
+              src='/anims/confetti.json'
+              style={{
+                height: '300px',
+                width: '300px',
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+              }}
+            >
+              <Controls
+                visible={false}
+                buttons={['play', 'repeat', 'frame', 'debug']}
+              />
+            </Player>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                setOpen(false);
+                handleNext();
+              }}
+            >
+              Next
+            </Button>
+          </DialogActions>
+        </Box>
+      </Dialog>
+
       <div>
         <Typography variant='h6' color='gray'>
           {office.name}
@@ -374,7 +447,7 @@ const Quests = ({ quests, office }) => {
       <FormWrapper form={form} onSubmit={handleSubmit}>
         <div>{renderAnswer(form, quests[activeIndex])}</div>
 
-        <div className='flex flex-row justify-end'>
+        <div className='flex flex-row justify-start'>
           <Button
             type='submit'
             variant='contained'
