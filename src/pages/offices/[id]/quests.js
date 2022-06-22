@@ -311,7 +311,9 @@ const Quests = ({ quests, office }) => {
         }}
       >
         <Box className='p-4 px-8'>
-          <DialogTitle>Congratulations, {auth?.firstName}! 🎉</DialogTitle>
+          <DialogTitle className='pb-8'>
+            Congratulations, {auth?.firstName}! 🎉
+          </DialogTitle>
           <DialogContent>
             <DialogContentText>
               Keep it up, you're done a great jobs today!
@@ -337,7 +339,6 @@ const Quests = ({ quests, office }) => {
 
             <Player
               autoplay
-              loop
               src='/anims/confetti.json'
               style={{
                 height: '300px',
@@ -346,12 +347,7 @@ const Quests = ({ quests, office }) => {
                 bottom: 0,
                 left: 0,
               }}
-            >
-              <Controls
-                visible={false}
-                buttons={['play', 'repeat', 'frame', 'debug']}
-              />
-            </Player>
+            ></Player>
           </DialogContent>
           <DialogActions>
             <Button

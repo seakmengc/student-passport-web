@@ -20,6 +20,7 @@ import {
   Box,
 } from '@mui/material';
 import moment from 'moment';
+import { Player } from '@lottiefiles/react-lottie-player';
 
 const ProfileDetail = () => {
   const [profile, setProfile] = useState();
@@ -69,7 +70,8 @@ const ProfileDetail = () => {
         )}
 
         <Typography variant='h5'>
-          {profile.name} <Chip label={offices.length} color='primary'></Chip>
+          {profile.name}
+          {/* <Chip label={offices.length} color='primary'></Chip> */}
         </Typography>
 
         <Typography variant='h7'>
@@ -80,43 +82,59 @@ const ProfileDetail = () => {
       <Divider />
       <Typography variant='h6'>Achievements:</Typography>
 
-      <div className='flex flex-wrap justify-items-center'>
-        {offices.map((office, index) => {
-          return (
-            <div
-              key={index}
-              style={{ height: '350px', maxWidth: '250px' }}
-              className='my-3 mx-4'
-            >
-              <Card
-                className='my-3 mx-4 hover:cursor-pointer'
-                onClick={() => {
-                  router.push(
-                    `/${office.parent ? 'units' : 'offices'}/${office._id}`
-                  );
-                }}
+      {offices.length > 0 ? (
+        <div className='flex flex-wrap justify-items-center'>
+          {offices.map((office, index) => {
+            return (
+              <div
+                key={index}
+                style={{ height: '350px', maxWidth: '250px' }}
+                className='my-3 mx-4'
               >
-                <CardActionArea>
-                  <Typography
-                    variant='caption'
-                    sx={{ letterSpacing: '0.25px' }}
-                    className='whitespace-nowrap pb-2'
-                  >
-                    {office.parent
-                      ? 'Unit Stamp of ' + office.parent.name
-                      : 'Office Stamp'}
-                    {''}
-                  </Typography>
-                  <img src={getUploadUrl(office.stamp)} height='100px' />
-                  <Typography variant='h5' sx={{ my: 4 }}>
-                    {office.name}
-                  </Typography>
-                </CardActionArea>
-              </Card>
-            </div>
-          );
-        })}
-      </div>
+                <Card
+                  className='my-3 mx-4 hover:cursor-pointer'
+                  onClick={() => {
+                    router.push(
+                      `/${office.parent ? 'units' : 'offices'}/${office._id}`
+                    );
+                  }}
+                >
+                  <CardActionArea>
+                    <Typography
+                      variant='caption'
+                      sx={{ letterSpacing: '0.25px' }}
+                      className='whitespace-nowrap pb-2'
+                    >
+                      {/* {office.parent
+                        ? 'Unit Stamp of ' + office.parent.name
+                        : 'Office Stamp'} */}
+
+                      {office.parent ? 'Unit Stamp' : 'Office Stamp'}
+                    </Typography>
+                    <img src={getUploadUrl(office.stamp)} height='100px' />
+                    <Typography variant='h5' sx={{ my: 4 }}>
+                      {office.name}
+                    </Typography>
+                  </CardActionArea>
+                </Card>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div className='flex flex-col items-center'>
+          <Player
+            autoplay
+            loop
+            src='/anims/empty.json'
+            style={{
+              height: '300px',
+              width: '300px',
+            }}
+          ></Player>
+          <Typography>No achievement yet. Come back later!</Typography>
+        </div>
+      )}
     </div>
   );
 };

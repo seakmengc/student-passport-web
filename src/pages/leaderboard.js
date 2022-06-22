@@ -12,11 +12,12 @@ import { authState } from 'src/states/auth';
 import { AuthRoute } from 'src/middleware/auth-route';
 import { findByModelIdPredicate } from 'src/utils/model';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
+import { Player } from '@lottiefiles/react-lottie-player';
 
 const renderRankComponent = ({ router, user, ind, auth, offices }) => {
   return (
     <Paper
-      className='flex flex-row justify-between p-2 shadow-lg'
+      className='sm:align-center flex flex-col justify-between p-2 shadow-lg sm:flex-row sm:space-x-4'
       elevation={7}
       id={ind + 1}
     >
@@ -54,19 +55,21 @@ const renderRankComponent = ({ router, user, ind, auth, offices }) => {
           </Typography>
         </Link>
       </div>
-      <Avatar.Group
-        count={Math.max(0, user.student.officesCompleted.length - 4)}
-      >
-        {user.student.officesCompleted.slice(0, 4).map((each) => {
-          return (
-            <Avatar
-              src={getUploadUrl(
-                offices?.find((office) => office._id === each)?.stamp
-              )}
-            />
-          );
-        })}
-      </Avatar.Group>
+      <div className='flex justify-end'>
+        <Avatar.Group
+          count={Math.max(0, user.student.officesCompleted.length - 4)}
+        >
+          {user.student.officesCompleted.slice(0, 4).map((each) => {
+            return (
+              <Avatar
+                src={getUploadUrl(
+                  offices?.find((office) => office._id === each)?.stamp
+                )}
+              />
+            );
+          })}
+        </Avatar.Group>
+      </div>
     </Paper>
   );
 };
@@ -88,33 +91,34 @@ const Leaderboard = () => {
     setOffices(officesData.data);
 
     if (auth) {
-      setMyRank(
-        leaderboardData.data.findIndex((user) => user._id === auth._id) + 1
-      );
+      const ind = leaderboardData.data.findIndex(findByModelIdPredicate(auth));
+      if (ind < 0) {
+        setMyRank(null);
+      } else {
+        setMyRank(ind + 1);
+      }
     }
   }, []);
 
   return (
     <div className='flex flex-row justify-center'>
-      <div className='w-3/4'>
+      <div className='w-full sm:w-5/6'>
         <Typography variant='h4' className='pb-4'>
           Leaderboard
         </Typography>
 
-        {!auth?.isAdmin && (
+        {!auth?.isAdmin && myRank !== undefined && (
           <div className='pb-3'>
-            {myRank && (
-              <div className='p-2'>
-                <Typography variant='h6'>
-                  My Rank - {myRank ?? 'N/A'}
-                  {myRank && (
-                    <Link className='pl-2' href={'#' + myRank}>
-                      VIEW
-                    </Link>
-                  )}
-                </Typography>
-              </div>
-            )}
+            <div className='p-2'>
+              <Typography variant='h6'>
+                My Rank - {myRank ?? 'N/A'}
+                {myRank && (
+                  <Link className='pl-2' href={'#' + myRank}>
+                    VIEW
+                  </Link>
+                )}
+              </Typography>
+            </div>
           </div>
         )}
 

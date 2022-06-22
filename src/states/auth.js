@@ -24,7 +24,6 @@ export const setAuth = async (accessToken = null) => {
     accessToken ?? getRecoil(tokenState).accessToken
   );
 
-  console.log({ error, myOfficesData });
   if (error || myOfficesData.error) {
     setLogout();
     return;

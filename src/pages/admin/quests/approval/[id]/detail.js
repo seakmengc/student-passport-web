@@ -28,6 +28,7 @@ import { CustomSingleChip } from 'src/@core/components/forms/custom-single-chip'
 import * as yup from 'yup';
 import { CustomTextField } from 'src/@core/components/forms/custom-text-field';
 import { useSnackbar } from 'notistack';
+import { useRouter } from 'next/router';
 
 const BpIcon = styled('span')(({ theme }) => ({
   borderRadius: '50%',
@@ -99,6 +100,7 @@ const schema = yup
 const QuestDetail = ({ studentQuest }) => {
   const [isApproved, setIsApproved] = useState(true);
   const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
 
   const form = useReactHookForm(schema, {
     isApproved,
@@ -120,6 +122,7 @@ const QuestDetail = ({ studentQuest }) => {
     enqueueSnackbar(`Quest ${input['isApproved'] ? 'approved' : 'rejected'}!`, {
       variant: 'success',
     });
+    router.back();
   };
 
   const renderAnswerByType = (studentQuest) => {
@@ -149,11 +152,12 @@ const QuestDetail = ({ studentQuest }) => {
     }
 
     return (
-      <Image
+      <img
         src={getUploadUrl(getArrByField(studentQuest, 'upload'))}
         width='100%'
         height='100%'
-      ></Image>
+        style={{ minWidth: '500px' }}
+      />
     );
   };
 

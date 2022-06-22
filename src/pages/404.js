@@ -15,6 +15,7 @@ import BlankLayout from 'src/@core/layouts/BlankLayout';
 import FooterIllustrations from 'src/views/pages/misc/FooterIllustrations';
 import { useRouter } from 'next/router';
 import { route } from 'next/dist/server/router';
+import { Player } from '@lottiefiles/react-lottie-player';
 
 // ** Styled Components
 const BoxWrapper = styled(Box)(({ theme }) => ({
@@ -72,14 +73,23 @@ const Error404 = () => {
             This might happen due to resource has been deleted or invalid url.
           </Typography>
         </BoxWrapper>
-        <div className='h-1/4 w-1/2'>
-          <Image
+        <div className='h-1/4 w-full'>
+          {/* <Image
             alt='error-illustration'
             src='/images/pages/404.png'
             width={1500}
             height={1000}
             layout='intrinsic'
-          />
+          /> */}
+          <Player
+            autoplay
+            loop
+            src='/anims/404.json'
+            style={{
+              height: '300px',
+              width: '300px',
+            }}
+          ></Player>
         </div>
         <Button
           component='a'

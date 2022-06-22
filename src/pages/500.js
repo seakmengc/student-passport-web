@@ -13,6 +13,7 @@ import BlankLayout from 'src/@core/layouts/BlankLayout';
 // ** Demo Imports
 import FooterIllustrations from 'src/views/pages/misc/FooterIllustrations';
 import Image from 'next/image';
+import { Player } from '@lottiefiles/react-lottie-player';
 
 // ** Styled Components
 const BoxWrapper = styled(Box)(({ theme }) => ({
@@ -66,14 +67,23 @@ const Error500 = () => {
           </Typography>
           <Typography variant='body2'>Oops, something went wrong!</Typography>
         </BoxWrapper>
-        <div className='h-1/4 w-1/2'>
-          <Image
+        <div className='h-1/4 w-full'>
+          {/* <Image
             alt='error-illustration'
             src='/images/pages/500.png'
             width={1500}
             height={1000}
             layout='intrinsic'
-          />
+          /> */}
+          <Player
+            autoplay
+            loop
+            src='/anims/500.json'
+            style={{
+              height: '300px',
+              width: '300px',
+            }}
+          ></Player>
         </div>
         <Link passHref href='/'>
           <Button component='a' variant='contained' sx={{ px: 5.5 }}>

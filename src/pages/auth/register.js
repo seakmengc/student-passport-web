@@ -3,8 +3,6 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-import MuiCard from '@mui/material/Card';
-import MuiFormControlLabel from '@mui/material/FormControlLabel';
 import themeConfig from 'src/configs/themeConfig';
 import { CardCenterLayout } from 'src/@core/layouts/CardCenterLayout';
 import { FormWrapper } from 'src/@core/components/forms/wrapper';
@@ -17,9 +15,8 @@ import {
 import * as yup from 'yup';
 import { PasswordField } from 'src/@core/components/forms/password-field';
 import { usePostApi } from 'src/utils/api';
-import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
-import { tokenState } from 'src/states/token';
+import { setNewLogin } from 'src/states/token';
 import { AuthRoute } from 'src/middleware/auth-route';
 
 const LinkStyled = styled('a')(({ theme }) => ({
@@ -39,12 +36,9 @@ const schema = yup
 
 const RegisterPage = () => {
   const form = useReactHookForm(schema);
-  const [tokenStore, setTokenStore] = useRecoilState(tokenState);
   const router = useRouter();
 
   const onSubmit = async (input) => {
-    console.log(input);
-
     const { data, error } = await usePostApi('user/register', input);
 
     if (error) {
@@ -53,7 +47,8 @@ const RegisterPage = () => {
       return;
     }
 
-    setTokenStore((_) => data);
+    await setNewLogin(data);
+
     router.replace('/');
   };
 
@@ -85,7 +80,7 @@ const RegisterPage = () => {
           Adventure starts here 🚀
         </Typography>
         <Typography variant='body2'>
-          Make your app management easy and fun!
+          Get to know more about offices in a quick and fun way!
         </Typography>
       </Box>
       <FormWrapper form={form} onSubmit={onSubmit}>
@@ -109,15 +104,17 @@ const RegisterPage = () => {
           {...registerField(form, 'password')}
         ></PasswordField>
 
-        <Button
-          fullWidth
-          size='large'
-          type='submit'
-          variant='contained'
-          sx={{ marginBottom: 7 }}
-        >
-          Sign up
-        </Button>
+        <div className='mt-4'>
+          <Button
+            fullWidth
+            size='large'
+            type='submit'
+            variant='contained'
+            sx={{ marginBottom: 7 }}
+          >
+            Sign up
+          </Button>
+        </div>
         <Box
           sx={{
             display: 'flex',
