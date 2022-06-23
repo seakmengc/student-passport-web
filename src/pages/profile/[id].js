@@ -8,7 +8,7 @@ import { useGetApi } from 'src/utils/api';
 import Image from 'next/image';
 import { StudentLayout } from 'src/layouts/StudentLayout';
 import { ssrGetToken } from 'src/utils/ssr';
-import { Avatar, Card, Link, Row, Text } from '@nextui-org/react';
+import { Avatar, Link, Row, Text } from '@nextui-org/react';
 import {
   Button,
   CardActionArea,
@@ -18,6 +18,7 @@ import {
   Typography,
   Grid,
   Box,
+  Card,
 } from '@mui/material';
 import moment from 'moment';
 import { Player } from '@lottiefiles/react-lottie-player';
@@ -89,10 +90,10 @@ const ProfileDetail = () => {
               <div
                 key={index}
                 style={{ height: '350px', maxWidth: '250px' }}
-                className='my-3 mx-4'
+                className='mx-4 mt-2'
               >
                 <Card
-                  className='my-3 mx-4 hover:cursor-pointer'
+                  className='rounded-lg px-4 py-2 hover:cursor-pointer'
                   onClick={() => {
                     router.push(
                       `/${office.parent ? 'units' : 'offices'}/${office._id}`
