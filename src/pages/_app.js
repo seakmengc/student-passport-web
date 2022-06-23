@@ -77,18 +77,9 @@ const App = (props) => {
         >
           <SettingsProvider>
             <SettingsConsumer>
-              {(args) => {
-                if (typeof window !== 'undefined') {
-                  args.settings = {
-                    ...args.settings,
-                    mode: localStorage.getItem('mode') ?? 'light',
-                  };
-
-                  args.saveSettings();
-                }
-
+              {({ settings }) => {
                 return (
-                  <ThemeComponent settings={args.settings}>
+                  <ThemeComponent settings={settings}>
                     {getLayout(<Component {...pageProps} />)}
                   </ThemeComponent>
                 );

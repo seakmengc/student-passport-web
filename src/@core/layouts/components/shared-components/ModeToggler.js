@@ -10,7 +10,6 @@ const ModeToggler = (props) => {
 
   const handleModeChange = (mode) => {
     saveSettings({ ...settings, mode });
-    localStorage.setItem('mode', mode);
   };
 
   const handleModeToggle = () => {
