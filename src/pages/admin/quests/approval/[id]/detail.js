@@ -156,7 +156,7 @@ const QuestDetail = ({ studentQuest }) => {
         src={getUploadUrl(getArrByField(studentQuest, 'upload'))}
         width='100%'
         height='100%'
-        style={{ minWidth: '500px' }}
+        style={{ minWidth: '500px', maxHeight: '500px' }}
       />
     );
   };

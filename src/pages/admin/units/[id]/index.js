@@ -84,7 +84,7 @@ const OfficeDetail = ({ office, parents, admins, inCreateMode }) => {
             id: parent._id,
             data: parent.name,
           }))}
-          defaultSelected={office?.parent?._id}
+          defaultSelected={getIdFromModel(office?.parent)}
           {...registerSelectField(form, 'parent')}
         ></CustomChip>
 
@@ -145,9 +145,11 @@ export const getServerSideProps = AdminRoute(async (ctx) => {
   );
 
   const rtn = {
-    props: { inCreateMode: true, admins: admins.data, parents: parents.data },
+    props: { inCreateMode: false, admins: admins.data, parents: parents.data },
   };
   if (shouldIgnoreId(ctx.params.id)) {
+    rtn.props.inCreateMode = true;
+
     return rtn;
   }
 
