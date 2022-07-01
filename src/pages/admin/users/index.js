@@ -2,14 +2,22 @@ import { AdminRoute } from 'src/middleware/admin-route';
 import router from 'next/router';
 import { CrudTable } from 'src/components/crud/table';
 import { OfficePerm } from 'src/perms/office';
-import { Checkbox, Chip, IconButton, Tooltip } from '@mui/material';
+import { Avatar, Checkbox, Chip, IconButton, Tooltip } from '@mui/material';
 import BlockIcon from '@mui/icons-material/Block';
 import CachedIcon from '@mui/icons-material/Cached';
 import { useRef, useState } from 'react';
 import { useDeleteApi, usePutApi } from 'src/utils/api';
 import { useSnackbar } from 'notistack';
+import { getProfileUrl, getUploadUrl } from 'src/utils/user';
 
 const cols = [
+  {
+    field: 'profile',
+    display: 'Profile',
+    getCell: (row) => {
+      return <Avatar src={getProfileUrl(row)}></Avatar>;
+    },
+  },
   { field: 'name', display: 'Name' },
   { field: 'role', display: 'Role' },
   {

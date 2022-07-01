@@ -1,18 +1,15 @@
-import { Card, Chip, Link, Paper, Typography } from '@mui/material';
+import { Chip, Link, Paper, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { StudentLayout } from 'src/layouts/StudentLayout';
 import { StudentRoute } from 'src/middleware/student-route';
 import { useGetApi } from 'src/utils/api';
-import EmojiEventsTwoToneIcon from '@mui/icons-material/EmojiEventsTwoTone';
 import { Avatar } from '@nextui-org/react';
 import { getProfileUrl, getUploadUrl } from 'src/utils/user';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { authState } from 'src/states/auth';
-import { AuthRoute } from 'src/middleware/auth-route';
 import { findByModelIdPredicate } from 'src/utils/model';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
-import { Player } from '@lottiefiles/react-lottie-player';
 
 const renderRankComponent = ({ router, user, ind, auth, offices }) => {
   return (
@@ -43,12 +40,15 @@ const renderRankComponent = ({ router, user, ind, auth, offices }) => {
           }}
           className='hover:cursor-pointer'
         />
-        <Link href={'/profile/' + user._id}>
+        <Link
+          href={
+            (router.asPath.startsWith('/admin') ? '/admin' : '') +
+            '/profile/' +
+            user._id
+          }
+        >
           <Typography
             variant='h7'
-            onClick={() => {
-              router.push('/profile/' + user._id);
-            }}
             className='hover:cursor-pointer hover:underline'
           >
             {user.firstName} {user.lastName}

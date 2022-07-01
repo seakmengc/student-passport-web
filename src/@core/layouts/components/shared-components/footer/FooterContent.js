@@ -18,11 +18,7 @@ const FooterContent = () => {
       }}
     >
       <Typography sx={{ mr: 2 }}>
-        {`© ${new Date().getFullYear()}, Made with `}
-        <Box component='span' sx={{ color: 'error.main' }}>
-          ❤️
-        </Box>
-        {` by `}
+        {`All rights reserved. Copyright © ${new Date().getFullYear()} - `}
         <Link target='_blank' href='https://themeselection.com/'>
           Student Passport
         </Link>
