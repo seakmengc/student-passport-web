@@ -97,7 +97,7 @@ const schema = yup
   })
   .required();
 
-const QuestDetail = ({ studentQuest }) => {
+const StudentQuestDetail = ({ studentQuest, handleCloseDialog = null }) => {
   const [isApproved, setIsApproved] = useState(true);
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
@@ -122,7 +122,12 @@ const QuestDetail = ({ studentQuest }) => {
     enqueueSnackbar(`Quest ${input['isApproved'] ? 'approved' : 'rejected'}!`, {
       variant: 'success',
     });
-    router.back();
+
+    if (handleCloseDialog) {
+      handleCloseDialog(studentQuest);
+    } else {
+      router.back();
+    }
   };
 
   const renderAnswerByType = (studentQuest) => {
@@ -241,7 +246,7 @@ const QuestDetail = ({ studentQuest }) => {
   );
 };
 
-export default QuestDetail;
+export default StudentQuestDetail;
 
 export const getServerSideProps = AdminRoute(async (ctx) => {
   const { accessToken } = await ssrGetToken(ctx);

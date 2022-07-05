@@ -69,6 +69,7 @@ export const CrudTable = ({
   shouldDisplay,
   getCustomActions = null,
   formatData = null,
+  setReloadRef = null,
   searchLabel = 'Search',
 }) => {
   const [rows, setRows] = useState([]);
@@ -93,6 +94,10 @@ export const CrudTable = ({
   }) => {
     setDialog({ title, content, onYes, open: true });
   };
+
+  if (setReloadRef) {
+    setReloadRef.callback = setReload;
+  }
 
   useEffect(() => {
     onPageChange(null, pagination.currentPage ?? 1);
@@ -126,12 +131,7 @@ export const CrudTable = ({
 
   return (
     <>
-      <Dialog
-        open={dialog.open}
-        onClose={handleClose}
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-dialog-description'
-      >
+      <Dialog open={dialog.open} onClose={handleClose}>
         <DialogTitle>{dialog?.title}</DialogTitle>
         <DialogContent>
           <DialogContentText>{dialog?.content}</DialogContentText>
@@ -224,8 +224,8 @@ export const CrudTable = ({
                     <CrudActions
                       nameIdentifier={getNameIdentifier(row)}
                       onShowClick={
-                        onShowClick && shouldDisplay(null, 'show')
-                          ? () => onShowClick(row)
+                        onShowClick && shouldDisplay(row, 'show')
+                          ? () => onShowClick(row, setReload)
                           : null
                       }
                       onEditClick={

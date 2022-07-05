@@ -98,9 +98,9 @@ export default function UserList() {
             </Tooltip>
           );
         }}
-        onCreateClick={() => {
-          router.push(router.asPath + '/register');
-        }}
+        // onCreateClick={() => {
+        //   router.push(router.asPath + '/register');
+        // }}
         // onEditClick={(user) => {
         //   router.push(router.asPath + '/' + user._id);
         // }}

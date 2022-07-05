@@ -31,19 +31,23 @@ const navigation = () => {
       icon: AccountCogOutline,
       path: '/admin/account-settings',
     },
-    {
-      sectionTitle: 'Users',
-    },
-    {
-      title: 'User List',
-      icon: ViewListIcon,
-      path: '/admin/users',
-    },
-    {
-      title: 'Register',
-      icon: HowToRegIcon,
-      path: '/admin/users/register',
-    },
+    ...(OfficePerm.isSuperAdmin()
+      ? [
+          {
+            sectionTitle: 'Users',
+          },
+          {
+            title: 'User List',
+            icon: ViewListIcon,
+            path: '/admin/users',
+          },
+          {
+            title: 'Register',
+            icon: HowToRegIcon,
+            path: '/admin/users/register',
+          },
+        ]
+      : []),
     {
       sectionTitle: 'Offices',
     },
