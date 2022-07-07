@@ -11,7 +11,7 @@ import List from '@editorjs/list';
 import Quote from '@editorjs/quote';
 import CodeTool from '@editorjs/code';
 import Embed from '@editorjs/embed';
-
+import BreakLine from 'editorjs-break-line';
 import { StyleInlineTool } from 'editorjs-style';
 import Tooltip from 'editorjs-tooltip';
 // import { CloudImage } from './UploadImage/CloudImage';
@@ -106,12 +106,14 @@ const CustomEditor = (props) => {
             },
           },
         },
+
         linkTool: {
           class: LinkTool,
           config: {
             endpoint: '/api/fetch-url', // Your backend endpoint for url data fetching,
           },
         },
+
         checklist: Checklist,
         table: {
           class: Table,
@@ -154,10 +156,17 @@ const CustomEditor = (props) => {
             captionPlaceholder: "Quote's author",
           },
         },
-        code: {
-          class: CodeTool,
-          inlineToolbar: true,
-        },
+
+        // breakLine: {
+        //   class: BreakLine,
+        //   inlineToolbar: true,
+        //   shortcut: 'ENTER',
+        // },
+
+        // code: {
+        //   class: CodeTool,
+        //   inlineToolbar: true,
+        // },
       },
     });
 

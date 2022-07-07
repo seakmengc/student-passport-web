@@ -16,7 +16,6 @@ import { StudentLayout } from 'src/layouts/StudentLayout';
 import { OfficeCard } from 'src/components/pages/office';
 import { defaultProgress } from 'src/pages';
 
-//TODO: finish
 const renderChildrenCards = (office, router) => {
   return (
     <>

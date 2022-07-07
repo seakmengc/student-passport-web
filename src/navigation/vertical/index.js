@@ -31,42 +31,50 @@ const navigation = () => {
       icon: AccountCogOutline,
       path: '/admin/account-settings',
     },
-    ...(OfficePerm.isSuperAdmin()
-      ? [
-          {
-            sectionTitle: 'Users',
-          },
-          {
-            title: 'User List',
-            icon: ViewListIcon,
-            path: '/admin/users',
-          },
-          {
-            title: 'Register',
-            icon: HowToRegIcon,
-            path: '/admin/users/register',
-          },
-        ]
-      : []),
-    {
-      sectionTitle: 'Offices',
-    },
-    {
-      title: 'Offices',
-      icon: ApartmentIcon,
-      path: '/admin/offices',
-    },
-    {
-      title: 'Units',
-      icon: LocalLibraryIcon,
-      path: '/admin/units',
-    },
-    {
-      title: 'Approval',
-      icon: LibraryAddCheckIcon,
-      path: '/admin/quests/approval',
-    },
   ];
+
+  if (OfficePerm.isSuperAdmin()) {
+    rtn.push(
+      ...[
+        {
+          sectionTitle: 'Users',
+        },
+        {
+          title: 'User List',
+          icon: ViewListIcon,
+          path: '/admin/users',
+        },
+        {
+          title: 'Register',
+          icon: HowToRegIcon,
+          path: '/admin/users/register',
+        },
+      ]
+    );
+  }
+
+  rtn.push(
+    ...[
+      {
+        sectionTitle: 'Offices',
+      },
+      {
+        title: 'Offices',
+        icon: ApartmentIcon,
+        path: '/admin/offices',
+      },
+      {
+        title: 'Units',
+        icon: LocalLibraryIcon,
+        path: '/admin/units',
+      },
+      {
+        title: 'Approval',
+        icon: LibraryAddCheckIcon,
+        path: '/admin/quests/approval',
+      },
+    ]
+  );
 
   if (OfficePerm.isSuperAdmin()) {
     rtn.push(

@@ -6,7 +6,6 @@ import {
   FormControlLabel,
   Card,
 } from '@mui/material';
-import Image from 'next/image';
 import React, { useState } from 'react';
 import { AdminRoute } from 'src/middleware/admin-route';
 import { useGetApi, usePutApi } from 'src/utils/api';
@@ -14,9 +13,6 @@ import { getArrByField } from 'src/utils/arr';
 import { ssrGetToken } from 'src/utils/ssr';
 import { getUploadUrl } from 'src/utils/user';
 import styled from '@emotion/styled';
-import DoneIcon from '@mui/icons-material/Done';
-import CloseIcon from '@mui/icons-material/Close';
-import { ConfirmationDialog } from 'src/@core/components/alerts/confirmation-dialog';
 import { FormWrapper } from 'src/@core/components/forms/wrapper';
 import {
   registerField,

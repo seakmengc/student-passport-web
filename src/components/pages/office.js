@@ -39,9 +39,11 @@ export const OfficeCard = ({ office }) => {
         {/* <Typography variant='h6'>
           {office.progress.default ? 'Welcome back!' : 'Try me out!'}
         </Typography> */}
-        <Typography variant='h5' sx={{ my: 4 }}>
-          {office.name}
-        </Typography>
+        <div style={{ height: 70 }}>
+          <Typography variant='h5' sx={{ my: 4 }}>
+            {office.name}
+          </Typography>
+        </div>
         {/* <Typography variant='body2' sx={{ letterSpacing: '0.25px' }}>
           {office.progress.numOfQuestsCompleted}
         </Typography> */}
@@ -61,11 +63,14 @@ export const OfficeCard = ({ office }) => {
           />
           <Typography variant='caption'>
             {office.progress?.quests?.length > 0
-              ? Math.round(
-                  (office.progress.numOfQuestsCompleted /
-                    office.progress.quests.length) *
-                    10000
-                ) / 100
+              ? Math.min(
+                  100,
+                  Math.round(
+                    (office.progress.numOfQuestsCompleted /
+                      office.progress.quests.length) *
+                      10000
+                  ) / 100
+                )
               : 0}
             %
           </Typography>

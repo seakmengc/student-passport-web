@@ -19,6 +19,7 @@ const cols = [
     },
   },
   { field: 'name', display: 'Name' },
+  { field: 'email', display: 'Email' },
   { field: 'role', display: 'Role' },
   {
     field: 'isActive',

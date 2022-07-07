@@ -53,7 +53,9 @@ const OfficeDetail = ({ office, admins, inCreateMode }) => {
   });
 
   const onSubmit = async (input) => {
-    input['description'] = await saveContent.callback();
+    if (saveContent?.callback) {
+      input['description'] = await saveContent.callback();
+    }
 
     const { data, error } = await (inCreateMode
       ? usePostApi('office', input)
@@ -72,11 +74,11 @@ const OfficeDetail = ({ office, admins, inCreateMode }) => {
 
   return (
     <div>
-      <div className='ml-4 mb-4 flex flex-row justify-between'>
+      <div className='mb-4 flex flex-row justify-between'>
         <Typography variant='h4'>{office?.name}</Typography>
-        <Button variant='contained' onClick={form.handleSubmit(onSubmit)}>
+        {/* <Button variant='contained' onClick={form.handleSubmit(onSubmit)}>
           Save
-        </Button>
+        </Button> */}
       </div>
 
       <FormWrapper form={form} onSubmit={onSubmit}>

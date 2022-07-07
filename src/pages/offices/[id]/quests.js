@@ -166,6 +166,10 @@ const Quests = ({ quests, office }) => {
     if (quests[currIndex].submission?.status === 'rejected') {
       setAlert({ type: 'error', message: quests[currIndex].submission.reason });
     }
+
+    if (quests[currIndex].submission && quests[currIndex].submission.upload) {
+      setImgSrc(getUploadUrl(quests[currIndex].submission.upload));
+    }
   }, []);
 
   const handleNext = (forceIndex) => {
@@ -233,6 +237,11 @@ const Quests = ({ quests, office }) => {
     }
 
     if (quest.questType === 'media') {
+      const onSubmitClick = () => {
+        console.log({ uploadRef });
+        uploadRef.current?.click();
+      };
+
       return (
         <Box
           className='grid place-content-center justify-center'
@@ -242,13 +251,7 @@ const Quests = ({ quests, office }) => {
             <ImgStyled
               className='p-3 hover:cursor-pointer'
               src={imgSrc}
-              onClick={
-                quest.canSubmit
-                  ? () => {
-                      uploadRef.current?.click();
-                    }
-                  : null
-              }
+              onClick={quest.canSubmit ? onSubmitClick : null}
             />
           </div>
 
@@ -257,17 +260,12 @@ const Quests = ({ quests, office }) => {
             hidden
             type='file'
             onChange={(file) => onImageChange(form, file, setImgSrc)}
-            accept='image/png, image/jpeg, image/jpg, video/mp4'
+            accept='image/png, image/jpeg, image/jpg'
           />
 
           <Button
-            onClick={
-              quest.canSubmit
-                ? () => {
-                    uploadRef.current?.click();
-                  }
-                : null
-            }
+            disabled={!quest.canSubmit}
+            onClick={quest.canSubmit ? onSubmitClick : null}
           >
             Click to Upload
           </Button>
