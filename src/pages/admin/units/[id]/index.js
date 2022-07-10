@@ -25,7 +25,6 @@ import CustomImage from 'src/@core/components/forms/custom-image';
 const schema = yup
   .object({
     name: yup.string().required(),
-    parent: yup.string().required(),
     admins: yup.array().required(),
     description: yup.string(),
   })
@@ -46,6 +45,10 @@ const OfficeDetail = ({ office, parents, admins, inCreateMode }) => {
   const onSubmit = async (input) => {
     input['description'] = await saveContent.callback();
 
+    if (typeof input['parent'] !== 'string') {
+      input['parent'] = input['parent']['_id'];
+    }
+
     const { data, error } = await (inCreateMode
       ? usePostApi('office', input)
       : usePatchApi('office/' + office._id, input));
@@ -63,11 +66,8 @@ const OfficeDetail = ({ office, parents, admins, inCreateMode }) => {
 
   return (
     <div>
-      <div className='ml-4 mb-4 flex flex-row justify-between'>
+      <div className='mb-4 flex flex-row justify-between'>
         <Typography variant='h4'>{office?.name}</Typography>
-        <Button variant='contained' onClick={form.handleSubmit(onSubmit)}>
-          Save
-        </Button>
       </div>
 
       <FormWrapper form={form} onSubmit={onSubmit}>

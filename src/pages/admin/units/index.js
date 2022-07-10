@@ -9,6 +9,7 @@ import { OfficePerm } from 'src/perms/office';
 
 const cols = [
   { field: 'name', display: 'Name' },
+  { field: 'parent.name', display: 'Office Name' },
   // {
   //   field: 'hasUnits',
   //   display: 'Has Units',
@@ -47,12 +48,12 @@ export default function OfficeList() {
             </Tooltip>
           );
         }}
-        shouldDisplay={(office, action) => {
+        shouldDisplay={(unit, action) => {
           if (action === 'show') {
             return true;
           }
 
-          return OfficePerm.isAdminOf(office?._id);
+          return OfficePerm.isAdminOfUnit(unit);
         }}
         onCreateClick={() => {
           router.push(router.asPath + '/create');

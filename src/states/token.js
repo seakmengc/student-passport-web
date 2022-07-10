@@ -48,6 +48,7 @@ export const refreshIfExpired = async ({ exp, refreshToken, accessToken }) => {
     if (isInServerSide()) {
       throwRedirectError('/auth/login');
     } else {
+      window.location.reload();
       return {};
     }
   }

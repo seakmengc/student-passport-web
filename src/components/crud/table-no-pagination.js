@@ -19,6 +19,7 @@ import { useRouter } from 'next/router';
 import { CustomSearchField } from 'src/@core/components/forms/custom-search-field';
 import { CrudActions } from 'src/@core/components/tables/crud-actions';
 import { AlertCommon } from 'src/@core/components/alerts/common';
+import { getArrByField } from 'src/utils/arr';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -157,7 +158,9 @@ export const CrudTableNoPagination = ({
                   {cols.map((col) => {
                     return (
                       <StyledTableCell align='left' {...col.format}>
-                        {col.getCell ? col.getCell(row) : row[col.field]}
+                        {col.getCell
+                          ? col.getCell(row)
+                          : getArrByField(row, col.field)}
                       </StyledTableCell>
                     );
                   })}

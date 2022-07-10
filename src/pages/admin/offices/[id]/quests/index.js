@@ -40,7 +40,11 @@ export default function QuestList({ office }) {
             return false;
           }
 
-          return OfficePerm.isAdminOf(quest?.office);
+          if (action === 'create') {
+            return OfficePerm.isAdminOfOffice(office);
+          }
+
+          return OfficePerm.isAdminOfOffice(quest?.office);
         }}
         onCreateClick={() => {
           router.push(router.asPath + '/create');
@@ -67,6 +71,8 @@ export const getServerSideProps = AdminRoute(async (ctx) => {
     {},
     accessToken
   );
+
+  data.admins = data.admins.map((admin) => admin._id);
 
   return {
     props: { office: data },

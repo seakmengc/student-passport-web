@@ -56,9 +56,7 @@ const renderRankComponent = ({ router, user, ind, auth, offices }) => {
         </Link>
       </div>
       <div className='flex justify-end'>
-        <Avatar.Group
-          count={Math.max(0, user.student.officesCompleted.length - 4)}
-        >
+        <Avatar.Group>
           {user.student.officesCompleted.slice(0, 4).map((each) => {
             return (
               <Avatar

@@ -30,16 +30,12 @@ const ProfileDetail = () => {
   const auth = useRecoilValue(authState);
 
   useEffect(async () => {
-    let user = null;
-    if (router.query.id === 'my') {
-      setProfile(auth);
-      user = auth;
-    } else {
-      const { data, error } = await useGetApi('user/' + router.query.id);
+    const userId = router.query.id === 'my' ? auth._id : router.query.id;
 
-      setProfile(data);
-      user = data;
-    }
+    const { data, error } = await useGetApi('user/' + userId);
+
+    setProfile(data);
+    const user = data;
 
     if (user.student.officesCompleted.length === 0) {
       return;
@@ -49,7 +45,7 @@ const ProfileDetail = () => {
       ids: user.student.officesCompleted,
     });
     setOffices(officesData.data);
-  }, []);
+  }, [router.query.id]);
 
   if (!profile) {
     return <p>Loading...</p>;

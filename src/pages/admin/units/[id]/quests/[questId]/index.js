@@ -168,7 +168,7 @@ export const getServerSideProps = AdminRoute(async (ctx) => {
   }
 
   const { data, error } = await useGetApi(
-    'quest/' + ctx.params.questId,
+    'quest/' + ctx.params.questId + '/admin',
     {},
     accessToken
   );

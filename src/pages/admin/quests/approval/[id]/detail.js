@@ -132,7 +132,7 @@ const StudentQuestDetail = ({ studentQuest, handleCloseDialog = null }) => {
     if (type === 'input') {
       return (
         <Typography variant='h6'>
-          Answered: {getArrByField(studentQuest, 'answer')}
+          {getArrByField(studentQuest, 'input')}
         </Typography>
       );
     }
@@ -168,11 +168,14 @@ const StudentQuestDetail = ({ studentQuest, handleCloseDialog = null }) => {
       <br></br>
       <Card className='p-4'>
         <Typography variant='h7'>
-          Quest: <br></br>
+          <b>Quest: </b>
+          <br></br>
           {getArrByField(studentQuest, 'quest.quest')}
         </Typography>
+        <br></br>
+        <br></br>
         <Typography variant='h7'>
-          Quest Type:{' '}
+          <b>Type: </b> <br></br>
           <span className='uppercase'>
             {getArrByField(studentQuest, 'quest.questType')}
           </span>

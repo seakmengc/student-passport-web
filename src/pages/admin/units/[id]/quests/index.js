@@ -40,7 +40,11 @@ export default function QuestList({ office }) {
             return false;
           }
 
-          return OfficePerm.isAdminOf(quest?.office);
+          if (action === 'create') {
+            return OfficePerm.isAdminOfUnit(office);
+          }
+
+          return OfficePerm.isAdminOfUnit(quest?.office);
         }}
         onCreateClick={() => {
           router.push(router.asPath + '/create');

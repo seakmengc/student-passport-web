@@ -9,6 +9,7 @@ import { useRef, useState } from 'react';
 import { useDeleteApi, usePutApi } from 'src/utils/api';
 import { useSnackbar } from 'notistack';
 import { getProfileUrl, getUploadUrl } from 'src/utils/user';
+import { SuperAdminRoute } from 'src/middleware/super-admin-route';
 
 const cols = [
   {
@@ -118,4 +119,4 @@ export default function UserList() {
   );
 }
 
-export const getServerSideProps = AdminRoute();
+export const getServerSideProps = SuperAdminRoute();
